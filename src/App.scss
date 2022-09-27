@@ -1,0 +1,43 @@
+@import './Variables.scss';
+
+body {
+    background: url('./image.jpeg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    font-size: $fontSize;
+}
+
+.App-header {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: $transparent;
+  }
+
+  100% {
+    background-color: $black;
+  }
+}
+
+.App {
+  background: $transparent;
+  max-width: $maxWith;
+  margin: $margin auto;
+  .page-section {
+    padding: $padding;
+    margin: $margin;
+  }
+}
+
+.page-section-wrapper {
+  animation: pulse 2s;
+  background-color: $black;
+  color: $white;
+}
