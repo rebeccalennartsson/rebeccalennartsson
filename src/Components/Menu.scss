@@ -28,11 +28,30 @@
 }
 
 .menu-toggle {
-    @extend #main-menu-phone;
-    min-width: 40px;
-    min-height: 40px;
-    margin: $margin;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    justify-content: space-between;
     color: $white;
-    font-size: 45px;
-    right: 0;
+    a {
+        min-width: 38px;
+        min-height: 38px;
+        text-align: center;
+        margin: $margin;
+        color: inherit;
+        font-size: 30px;
+        text-decoration: none;
+        background-color: rgba(255, 255, 255, 0.5);
+        padding: 10px;
+        border-radius: 50%;
+    }
+
+    h1 {
+        margin: $margin;
+        word-break: break-word;
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        hyphens: auto;
+    }
 }
