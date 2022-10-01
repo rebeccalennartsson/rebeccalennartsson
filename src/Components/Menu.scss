@@ -1,54 +1,73 @@
+@use 'sass:math';
 @import '../Variables.scss';
 
-#main-menu-phone {
-    display: flex;
+.menu {
     position: fixed;
-    flex-direction: column;
     z-index: 1;
-}
-
-/* Style the navigation menu */
-.topnav {
-    @extend #main-menu-phone;
-    padding: $padding;
-    background: $white;
-    max-width: $maxWith;
     width: 100%;
-    justify-content: center;
-    align-items: center;
 
-    a {
-        color: $black;
-        padding: $padding / 2;
-        text-decoration: none;
-        font-size: $fontSize;
-        display: block;
-        font-weight: bold;
+    .navigation {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        div {
+            min-width: 400px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .open-menu-btn {
+            margin: $margin;
+            text-align: center;
+            color: $black;
+            font-size: 30px;
+            text-decoration: none;
+            padding: math.div($padding, 2);
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            min-width: 38px;
+            min-height: 38px;
+        }
+
+        .open-menu-btn-inverted {
+            color: $white;
+            background-color: $black;
+        }
     }
-}
 
-.menu-toggle {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    position: fixed;
-    justify-content: space-between;
-    color: $white;
+    .navigation-inverted {
+        background-color: $white;
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        transition: background-color 0.5s linear;
+    }
+
+    .large {
+        padding: $padding;
+    }
+
     a {
-        min-width: 38px;
-        min-height: 38px;
-        text-align: center;
-        margin: $margin;
-        color: inherit;
-        font-size: 30px;
         text-decoration: none;
-        background-color: rgba(255, 255, 255, 0.5);
-        padding: 10px;
-        border-radius: 50%;
+        color: $black;
+    }
+
+    .drop-down {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background-color: $white;
+        a {
+            padding: $padding;
+        }
     }
 
     h1 {
-        margin: $margin;
+        margin: 0 $margin;
+        font-size: 35px;
+        font-weight: 100;
+        text-transform: uppercase;
         word-break: break-word;
         -webkit-hyphens: auto;
         -moz-hyphens: auto;

@@ -2,43 +2,26 @@ import './Menu.scss';
 import { useState, useContext, useEffect } from 'react';
 import { PagesContext } from '../Server/PagesContext';
 
-/**
- *
- * @param {closeLinks: any; isOpen: Boolean;} props
- * @returns
- */
-const MenuItems = (props) => {
-    const { closeLinks, isOpen } = props;
-    const { pages } = useContext(PagesContext);
-
-    if (!isOpen) {
-        return <></>;
-    }
-
-    const links = pages.map((page, key) => (
-        <a
-            onClick={closeLinks}
-            key={key}
-            href={`#${page.title.replaceAll(' ', '-')}`}
-        >
-            {page.title}
-        </a>
-    ));
-
+const TextLogo = () => {
     return (
-        <div className="topnav">
-            {links}
-            <a href="#close-menu" onClick={closeLinks}>X</a>
-        </div>
-    );
-};
+        <h1>
+            <a href="#">Rebecca Lennartsson</a>
+        </h1>
+    )
+}
 
 export const Menu = () => {
+    const { pages } = useContext(PagesContext);
     const [isOpen, setIsOpen] = useState(false);
-    const [isInView, setIsInView] = useState(false);
+    const [contentIsInView, setContentIsInView] = useState(false);
+    const [isPhone, setIsPhone] = useState(window.innerWidth < 768);
     const handleScroll = () => {
         const position = window.pageYOffset;
-        setIsInView((window.innerHeight - 75) < position);
+        setContentIsInView((window.innerHeight - 100) < position);
+    };
+
+    const handleResize = () => {
+        setIsPhone(window.innerWidth < 768);
     };
 
     useEffect(() => {
@@ -46,25 +29,53 @@ export const Menu = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const style = {
-        'backgroundColor': '#dddddd',
-        'boxShadow': '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
-        'transition': 'all 0.3s cubic-bezier(.25,.8,.25,1)',
-        'opacity': '0.9'
-    };
+    useEffect(() => {
+        window.addEventListener('resize', handleResize, { passive: true });
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
-    return (
-        <div>
-            <MenuItems isOpen={isOpen} closeLinks={() => setIsOpen(false)} />
-            {isOpen ? null : (
-                <div style={isInView ? style : {}} className="menu-toggle">
-                    <h1 style={{'color': isInView ? '#333333' : ''}}>Rebecca Lennartsson</h1>
+    const links = pages.map((page, key) => (
+        <a
+            onClick={() => setIsOpen(false)}
+            key={key}
+            href={`#${page.title.replaceAll(' ', '-')}`}
+        >
+            {page.title}
+        </a>
+    ));
 
-                    <a style={{'color': isInView ? '#dddddd' : '', 'backgroundColor': isInView ? '#333333' : ''}} href="#menu" onClick={() => setIsOpen(true)}>
-                        =
-                    </a>
+    if (isPhone) {
+        if (isOpen) {
+            return (
+                <div className="menu">
+                    <div className="drop-down">
+                        {links}
+                        <a href="#close-menu" onClick={() => setIsOpen(false)}>X</a>
+                    </div>
                 </div>
-            )}
-        </div>
-    );
+            )
+        } else {
+            return (
+                <div className="menu">
+                    <div className={`navigation ${contentIsInView ? 'navigation-inverted' : ''}`}>
+                        <TextLogo />
+                        <a className={`open-menu-btn ${contentIsInView ? 'open-menu-btn-inverted' : ''}`} href="#open-menu" onClick={() => setIsOpen(true)}>
+                            =
+                        </a>
+                    </div>
+                </div>
+            )
+        }
+    } else {
+        return (
+            <div className="menu">
+                <div className={`navigation large ${contentIsInView ? 'navigation-inverted ' : ''}`}>
+                    <TextLogo />
+                    <div>
+                        {links}
+                    </div>
+                </div>
+            </div>
+        )
+    }
 };
