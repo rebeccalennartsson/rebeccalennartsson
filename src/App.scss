@@ -42,6 +42,30 @@ body {
   .page-section {
     padding: $padding;
     margin: $margin;
+    .form {
+      display: flex;
+      flex-direction: column;
+      .form-group {
+        margin: $margin 0;
+        input, textarea, select {
+          width: 100%;
+          padding: 12px 20px;
+          margin: $margin 0;
+          box-sizing: border-box;
+        }
+      }
+      button {
+        padding: 12px 20px;
+        width: auto;
+        background-color: seagreen;
+        color: $white;
+        box-sizing: border-box;
+        margin: $margin 0;
+        border: none;
+        cursor: pointer;
+        font-size: $fontSize;
+      }
+    }
   }
 }
 

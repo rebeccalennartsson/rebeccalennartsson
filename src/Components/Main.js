@@ -1,41 +1,11 @@
 import { React, useContext, useState, useEffect } from 'react';
 import { PagesContext } from '../Server/PagesContext';
-
-/**
- *
- * @param {{ name: String; value: String; }} props
- * @returns
- */
-const NameValue = (props) => {
-    const { name, value } = props;
-    return (
-        <div>
-            <span>{name}</span>
-            <span>{value}</span>
-        </div>
-    );
-};
-
-/**
- *
- * @param {{ nameValues: [{name: String; value: String;}]|null}} props
- * @returns
- */
-const NameValues = (props) => {
-    const { nameValues } = props;
-    if (!nameValues || nameValues.length <= 0) {
-        return <></>;
-    }
-
-    return nameValues.map((nv, key) => (
-        <NameValue key={key} name={nv.name} value={nv.value} />
-    ));
-};
+import { Form } from './ContactForm';
 
 const Pages = () => {
     const { pages } = useContext(PagesContext);
-    return pages.map((p, key) => {
-        const { title, text, name_values } = p;
+    const sections = pages.map((p, key) => {
+        const { title, text } = p;
         return (
             <section
                 id={title.replaceAll(' ', '-')}
@@ -44,12 +14,16 @@ const Pages = () => {
             >
                 <h1 className="title">{title}</h1>
                 <div className="text">{text}</div>
-                <div className="name-values">
-                    <NameValues nameValues={name_values} />
-                </div>
             </section>
         );
     });
+
+    return (
+        <>
+            {sections}
+            <Form />
+        </>
+    );
 };
 
 export const Main = (props) => {

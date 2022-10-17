@@ -10,6 +10,16 @@ const TextLogo = () => {
     )
 }
 
+const Link = (props) => {
+    const { event, title, navigate } = props;
+    const href = navigate === null ? title.replaceAll(' ', '-') : navigate;
+    return (
+        <a onClick={event} href={`#${href}`}>
+            {title}
+        </a>
+    );
+}
+
 export const Menu = () => {
     const { pages } = useContext(PagesContext);
     const [isOpen, setIsOpen] = useState(false);
@@ -34,15 +44,7 @@ export const Menu = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const links = pages.map((page, key) => (
-        <a
-            onClick={() => setIsOpen(false)}
-            key={key}
-            href={`#${page.title.replaceAll(' ', '-')}`}
-        >
-            {page.title}
-        </a>
-    ));
+    const links = pages.map((page, key) => <Link event={() => setIsOpen(false)} key={key} title={page.title} navigate={null} />);
 
     if (isPhone) {
         if (isOpen) {
@@ -50,6 +52,7 @@ export const Menu = () => {
                 <div className="menu">
                     <div className="drop-down">
                         {links}
+                        <Link event={() => setIsOpen(false)} title="Kontakt" navigate="form" />
                         <a href="#close-menu" onClick={() => setIsOpen(false)}>X</a>
                     </div>
                 </div>
@@ -73,6 +76,7 @@ export const Menu = () => {
                     <TextLogo />
                     <div>
                         {links}
+                        <Link event={() => setIsOpen(false)} title="Kontakt" navigate="form" />
                     </div>
                 </div>
             </div>
