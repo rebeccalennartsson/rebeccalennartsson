@@ -10,7 +10,7 @@ html {
 }
 
 body {
-    background: url('./images/landscape.jpg');
+    background: url('./images/landscape.webp');
     background-position: center;
     background-repeat: no-repeat;
     background-size: auto 100%;
@@ -73,4 +73,15 @@ body {
   animation: pulse 2s;
   background-color: $black;
   color: $white;
+}
+
+@media (max-width: $mediaQueryBrake) {
+  body {
+    background: url('./images/portrait.webp');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+    background-attachment: fixed;
+    font-size: $fontSize;
+  }
 }
