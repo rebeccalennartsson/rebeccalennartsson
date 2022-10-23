@@ -2,7 +2,7 @@ export const Config = {
     pages: [
         {
             title: 'Om',
-            text: 'Mitt namn är Rebecca Lennartsson, jag är en utbildad sångerska och musikalartist. Söker du en solist till ditt bröllop eller nåt annat högtidligt event? Jag gör bröllop, dop, begravningar och har en bred repertoar.',
+            text: 'Rebecca är utbildad musikalartist vid Balettakademien i Göteborg och har studerat sång sen 2010. Hon blev 2021 tilldelad ett stipendie från Eduard Magnus Musikfond för fortsatta studier inom opera.',
             disabled: false,
         },
         {
