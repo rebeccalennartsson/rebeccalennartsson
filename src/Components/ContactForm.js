@@ -1,4 +1,5 @@
-import { React, useState } from 'react';
+import { React, useState, useContext } from 'react';
+import { ConfigContext } from '../Server/ConfigContext';
 
 const Input = (props) => {
     const { onChange, value, type, required, id, label } = props;
@@ -21,6 +22,7 @@ const TextArea = (props) => {
 }
 
 export const Form = () => {
+    const { Config } = useContext(ConfigContext);
     const selectOptions = [
         'Bröllop',
         'Begravning',
@@ -34,6 +36,8 @@ export const Form = () => {
     const [date, setDate] = useState('');
     const [subject, setSubject] = useState(selectOptions[0]);
 
+    const { settings: { contact }} = Config;
+
     function sendEmail() {
         const valid = subject.length > 0 && name.length > 0 && message.length > 0;
         if (!valid) {
@@ -44,10 +48,15 @@ export const Form = () => {
         const emailSubject = date.length > 0 ? `${subject} - ${date}` : subject;
         const body = `${message} %0D%0A%0D%0A/${name}`;
 
-        let url = `mailto:rebeccalennartsson1@gmail.com?subject=${emailSubject}&${cc}&body=${body}`;
+        let url = `mailto:${contact.email}?subject=${emailSubject}&${cc}&body=${body}`;
         // return url
         window.location.href = url;
     }
+
+    if (contact.disabled) {
+        return null;
+    }
+
     return (
         <section id="form" className="page-section">
             <h1 className="title">Kontakt</h1>

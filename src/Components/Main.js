@@ -1,9 +1,10 @@
 import { React, useContext, useState, useEffect } from 'react';
-import { PagesContext } from '../Server/PagesContext';
+import { ConfigContext } from '../Server/ConfigContext';
 import { Form } from './ContactForm';
 
 const Pages = () => {
-    const { pages } = useContext(PagesContext);
+    const { Config } = useContext(ConfigContext);
+    const pages = Config.pages.filter(p => !p.disabled);
     const sections = pages.map((p, key) => {
         const { title, text } = p;
         return (
@@ -27,6 +28,7 @@ const Pages = () => {
 };
 
 export const Main = (props) => {
+    const { Config } = useContext(ConfigContext);
     const [isInView, setIsInView] = useState(false);
     const handleScroll = () => {
         const position = window.pageYOffset;
@@ -38,15 +40,19 @@ export const Main = (props) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    const { settings: { youtube } } = Config;
     return (
         <div className={`App ${isInView ? 'page-section-wrapper' : ''}`}>
-            <iframe
-                className="show-reel"
-                src="https://www.youtube.com/embed/SMLaPKJopuQ?controls=0&autoplay=1"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen />
+            {!youtube.disabled ? (
+                <iframe
+                    className="show-reel"
+                    src={youtube.src}
+                    title={youtube.title}
+                    frameBorder="0"
+                    allow={youtube.allow}
+                    allowFullScreen />
+            ) : null}
+
             <Pages />
             <>{props.children}</>
         </div>

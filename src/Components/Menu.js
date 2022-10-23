@@ -1,11 +1,11 @@
 import './Menu.scss';
 import { useState, useContext, useEffect } from 'react';
-import { PagesContext } from '../Server/PagesContext';
+import { ConfigContext } from '../Server/ConfigContext';
 
 const TextLogo = () => {
     return (
         <h1>
-            <a href="#">Rebecca Lennartsson</a>
+            <a href="/">Rebecca Lennartsson</a>
         </h1>
     )
 }
@@ -22,7 +22,7 @@ const Link = (props) => {
 
 export const Menu = () => {
     const MEDIA_QUERY_BRAKE = 768;
-    const { pages } = useContext(PagesContext);
+    const { Config } = useContext(ConfigContext);
     const [isOpen, setIsOpen] = useState(false);
     const [contentIsInView, setContentIsInView] = useState(false);
     const [isPhone, setIsPhone] = useState(window.innerWidth < MEDIA_QUERY_BRAKE);
@@ -45,6 +45,7 @@ export const Menu = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    const pages = Config.pages.filter(p => !p.disabled);
     const links = pages.map((page, key) => <Link event={() => setIsOpen(false)} key={key} title={page.title} navigate={null} />);
 
     if (isPhone) {
@@ -77,7 +78,9 @@ export const Menu = () => {
                     <TextLogo />
                     <div>
                         {links}
-                        <Link event={() => setIsOpen(false)} title="Kontakt" navigate="form" />
+                        {!Config.settings.contact.disabled ? (
+                            <Link event={() => setIsOpen(false)} title="Kontakt" navigate="form" />
+                        ) : null}
                     </div>
                 </div>
             </div>
