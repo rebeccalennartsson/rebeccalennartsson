@@ -5,7 +5,7 @@ import { ConfigContext } from '../Server/ConfigContext';
 const TextLogo = () => {
     return (
         <h1>
-            <a href="/">Rebecca Lennartsson</a>
+            <a href="/rebeccalennartsson">Rebecca Lennartsson</a>
         </h1>
     )
 }
