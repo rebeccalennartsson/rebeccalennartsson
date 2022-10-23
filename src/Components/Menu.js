@@ -21,7 +21,7 @@ const Link = (props) => {
 }
 
 export const Menu = () => {
-    const MEDIA_QUERY_BRAKE = 768;
+    const MEDIA_QUERY_BRAKE = 821;
     const { Config } = useContext(ConfigContext);
     const [isOpen, setIsOpen] = useState(false);
     const [contentIsInView, setContentIsInView] = useState(false);
