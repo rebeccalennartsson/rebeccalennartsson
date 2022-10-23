@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/rebeccalennartsson/static/css/main.a311b76b.css",
-    "main.js": "/rebeccalennartsson/static/js/main.f4e58eff.js",
+    "main.css": "/rebeccalennartsson/static/css/main.f2abe28f.css",
+    "main.js": "/rebeccalennartsson/static/js/main.27ec9635.js",
     "static/js/787.cab40f5d.chunk.js": "/rebeccalennartsson/static/js/787.cab40f5d.chunk.js",
     "static/media/landscape.webp": "/rebeccalennartsson/static/media/landscape.b1498d6a97a84c38af35.webp",
     "static/media/roboto-latin-900italic.woff": "/rebeccalennartsson/static/media/roboto-latin-900italic.c20d916c1a1b094c1cec.woff",
@@ -30,12 +30,12 @@
     "static/media/roboto-latin-400.woff2": "/rebeccalennartsson/static/media/roboto-latin-400.176f8f5bd5f02b3abfcf.woff2",
     "static/media/roboto-latin-900.woff2": "/rebeccalennartsson/static/media/roboto-latin-900.870c8c1486f76054301a.woff2",
     "index.html": "/rebeccalennartsson/index.html",
-    "main.a311b76b.css.map": "/rebeccalennartsson/static/css/main.a311b76b.css.map",
-    "main.f4e58eff.js.map": "/rebeccalennartsson/static/js/main.f4e58eff.js.map",
+    "main.f2abe28f.css.map": "/rebeccalennartsson/static/css/main.f2abe28f.css.map",
+    "main.27ec9635.js.map": "/rebeccalennartsson/static/js/main.27ec9635.js.map",
     "787.cab40f5d.chunk.js.map": "/rebeccalennartsson/static/js/787.cab40f5d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a311b76b.css",
-    "static/js/main.f4e58eff.js"
+    "static/css/main.f2abe28f.css",
+    "static/js/main.27ec9635.js"
   ]
 }
