@@ -78,6 +78,31 @@ body {
   color: $white;
 }
 
+@media (min-width: $mediaQueryBrake) {
+  body {
+    background: url('./images/portrait.webp');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    font-size: $fontSize;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-color: $black;
+  }
+
+  .App {
+    background: inherit;
+  }
+
+  .page-section-wrapper {
+    animation: none;
+    background-color: $black;
+    color: $white;
+  }
+}
+
 @media (max-width: $mediaQueryBrake) {
   body {
     background: url('./images/portrait.webp');
@@ -89,5 +114,15 @@ body {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+    background-color: $black;
+  }
+  .App {
+    background: inherit;
+  }
+
+  .page-section-wrapper {
+    animation: none;
+    background-color: $black;
+    color: $white;
   }
 }
