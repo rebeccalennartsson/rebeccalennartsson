@@ -62,7 +62,7 @@ export const Form = () => {
             <h1 className="title">Kontakt</h1>
             <div className="text">
                 <p>
-                    Intresserad av att komma i kontakt med mig eller boka mig för ett event?
+                    Intresserad av att komma i kontakt med mig eller boka mig för ert event?
                     <br />
                     Skicka ett meddelande till mig genom att fylla i dina uppgifter i formuläret så återkommer jag så fort jag kan.
                 </p>

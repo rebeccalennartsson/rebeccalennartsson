@@ -12,12 +12,12 @@ export const Config = {
         },
         {
             title: 'Begravning',
-            text: 'Begravningen är en ceremoni där anhöriga kan säga farväl av den avlidne. Hur ceremonin ser ut väljer de anhöriga själva. Kanske fanns det ett önskemål från den avlidne, eller en religiös övertygelse som sätter tema på begravningen.',
+            text: 'Begravning är en känslofylld dag, full med minnen men främst avsked. Rebecca har flertalet gånger haft det ärofyllda uppdraget att genom sång hjälpa anhöriga ta avsked. Ni varmt välkomna att kontaka Rebecca, hon hjälper er gärna.',
             disabled: false,
         },
         {
             title: 'Dop',
-            text: 'Den som är döpt får inte döpas igen. Svenska kyrkan erkänner varje dop som har skett i Faderns och Sonens och den Helige Andes namn genom begjutning med eller nedsänkning i vatten. Det finns ingen åldersgräns för dop. I Sverige är det vanligast att man döps som spädbarn. En del föräldrar vill att barnet ska döpas så tidigt som möjligt och andra väntar tills barnet är några månader. Dopet av spädbarnet är ett uttryck för dopets gränslöshet - det är en gåva från Gud till barnet som ges utan krav.',
+            text: 'Planerar ni att förgylla kommande dop med sång? Då är ni varmt välkomna att kontakta Rebecca så hjälper hon er!',
             disabled: false,
         },
     ],
