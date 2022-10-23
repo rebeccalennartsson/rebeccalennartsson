@@ -7,7 +7,7 @@ export const Config = {
         },
         {
             title: 'Bröllop',
-            text: 'Ett bröllop är en vigsel och den tillhörande festen för att symbolisera att ett par ingått ett äktenskap. Ordet bröllop kommer av fornsvenskans bruþlöp, alltså ’brudlopp’. Brudloppet var beteckningen på det följe som ledsagade bruden från brudens hem där fästningen skett och det nya hemmet.[1] Bröllopet föregås ibland av en förlovning eller trolovning. I Sverige kan, om minst en av kontrahenterna är medlem i Svenska kyrkan, bröllopet föregås av lysning i den/de församlingar de tillhör.',
+            text: 'Planerar ni för ert kommande bröllop? Rebecca har många års erfarenhet av att sjunga på bröllop och har en bred repertoar. Varmt välkomna att kontakta Rebecca så hjälper hon er med sång på er stora dag!',
             disabled: false,
         },
         {
