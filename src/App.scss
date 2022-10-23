@@ -55,6 +55,7 @@ body {
           padding: 12px 20px;
           margin: $margin 0;
           box-sizing: border-box;
+          -webkit-appearance: none;
         }
       }
       button {
@@ -105,5 +106,8 @@ body {
     animation: none;
     background-color: $black;
     color: $white;
+  }
+  .show-reel {
+    height: 210px;
   }
 }
