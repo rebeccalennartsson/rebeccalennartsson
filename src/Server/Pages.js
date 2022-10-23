@@ -1,5 +1,9 @@
 export const Pages = [
     {
+        title: 'Om',
+        text: 'Mitt namn är Rebecca Lennartsson, jag är en utbildad sångerska och musikalartist. Söker du en solist till ditt bröllop eller nåt annat högtidligt event? Jag gör bröllop, dop, begravningar och har en bred repertoar.',
+    },
+    {
         title: 'Bröllop',
         text: 'Ett bröllop är en vigsel och den tillhörande festen för att symbolisera att ett par ingått ett äktenskap. Ordet bröllop kommer av fornsvenskans bruþlöp, alltså ’brudlopp’. Brudloppet var beteckningen på det följe som ledsagade bruden från brudens hem där fästningen skett och det nya hemmet.[1] Bröllopet föregås ibland av en förlovning eller trolovning. I Sverige kan, om minst en av kontrahenterna är medlem i Svenska kyrkan, bröllopet föregås av lysning i den/de församlingar de tillhör.',
     },

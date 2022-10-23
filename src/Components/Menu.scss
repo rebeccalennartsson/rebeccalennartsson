@@ -16,6 +16,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            a {
+                margin: 0 0 0 $margin;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
 
         .open-menu-btn {
@@ -51,18 +57,6 @@
         text-decoration: none;
         color: $black;
     }
-    @media (max-width: $mediaQueryBrake) {
-        a {
-            color: $white;
-        }
-
-        .navigation-inverted {
-            a {
-                color: $black;
-            }
-        }
-    }
-
     .drop-down {
         display: flex;
         justify-content: center;
@@ -78,12 +72,25 @@
     h1 {
         color: $black;
         margin: 0 $margin;
-        font-size: 35px;
+        font-size: 45px;
         font-weight: 100;
         text-transform: uppercase;
         word-break: break-word;
         -webkit-hyphens: auto;
         -moz-hyphens: auto;
         hyphens: auto;
+    }
+    @media (max-width: $mediaQueryBrake) {
+        h1 {
+            font-size: 30px;
+        }
+        a {
+            color: $white;
+        }
+        .navigation-inverted {
+            a {
+                color: $black;
+            }
+        }
     }
 }
