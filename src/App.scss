@@ -83,7 +83,7 @@ body {
     background: url('./images/portrait.webp');
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: scroll;
     font-size: $fontSize;
     -webkit-background-size: cover;
     -moz-background-size: cover;

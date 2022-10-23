@@ -55,6 +55,7 @@
         a {
             color: $white;
         }
+
         .navigation-inverted {
             a {
                 color: $black;
@@ -70,10 +71,12 @@
         background-color: $white;
         a {
             padding: $padding;
+            color: $black;
         }
     }
 
     h1 {
+        color: $black;
         margin: 0 $margin;
         font-size: 35px;
         font-weight: 100;
