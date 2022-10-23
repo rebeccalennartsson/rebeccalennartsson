@@ -13,9 +13,12 @@ body {
     background: url('./images/landscape.webp');
     background-position: center;
     background-repeat: no-repeat;
-    background-size: auto 100%;
     background-attachment: fixed;
     font-size: $fontSize;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
 .App-header {
@@ -80,8 +83,11 @@ body {
     background: url('./images/portrait.webp');
     background-position: center;
     background-repeat: no-repeat;
-    background-size: auto 100%;
     background-attachment: fixed;
     font-size: $fontSize;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
   }
 }

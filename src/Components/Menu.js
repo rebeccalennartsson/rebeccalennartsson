@@ -21,17 +21,18 @@ const Link = (props) => {
 }
 
 export const Menu = () => {
+    const MEDIA_QUERY_BRAKE = 768;
     const { pages } = useContext(PagesContext);
     const [isOpen, setIsOpen] = useState(false);
     const [contentIsInView, setContentIsInView] = useState(false);
-    const [isPhone, setIsPhone] = useState(window.innerWidth < 768);
+    const [isPhone, setIsPhone] = useState(window.innerWidth < MEDIA_QUERY_BRAKE);
     const handleScroll = () => {
         const position = window.pageYOffset;
         setContentIsInView((window.innerHeight - 100) < position);
     };
 
     const handleResize = () => {
-        setIsPhone(window.innerWidth < 768);
+        setIsPhone(window.innerWidth < MEDIA_QUERY_BRAKE);
     };
 
     useEffect(() => {
