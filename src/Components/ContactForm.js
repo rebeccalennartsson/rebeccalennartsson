@@ -59,7 +59,7 @@ export const Form = () => {
 
     return (
         <section id="form" className="page-section">
-            <h1 className="title">Kontakt</h1>
+            <h1 className="title">KONTAKT</h1>
             <div className="text">
                 <p>
                     Intresserad av att komma i kontakt med mig eller boka mig för ert event?

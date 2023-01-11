@@ -54,7 +54,7 @@ export const Menu = () => {
                 <div className="menu">
                     <div className="drop-down">
                         {links}
-                        <Link event={() => setIsOpen(false)} title="Kontakt" navigate="form" />
+                        <Link event={() => setIsOpen(false)} title="KONTAKT" navigate="form" />
                         <a href="#close-menu" onClick={() => setIsOpen(false)}>X</a>
                     </div>
                 </div>
@@ -79,7 +79,7 @@ export const Menu = () => {
                     <div>
                         {links}
                         {!Config.settings.contact.disabled ? (
-                            <Link event={() => setIsOpen(false)} title="Kontakt" navigate="form" />
+                            <Link event={() => setIsOpen(false)} title="KONTAKT" navigate="form" />
                         ) : null}
                     </div>
                 </div>

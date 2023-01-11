@@ -4,6 +4,7 @@ import Header from './Components/Header';
 import { Main } from './Components/Main';
 import { Config } from './Server/Config';
 import { ConfigContext } from './Server/ConfigContext';
+import { HelmetProvider } from 'react-helmet-async';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -15,12 +16,14 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <ConfigContext.Provider value={this.state}>
-                <div>
-                    <Header />
-                    <Main></Main>
-                </div>
-            </ConfigContext.Provider>
+            <HelmetProvider>
+                <ConfigContext.Provider value={this.state}>
+                    <div>
+                        <Header />
+                        <Main></Main>
+                    </div>
+                </ConfigContext.Provider>
+            </HelmetProvider>
         );
     }
 }
