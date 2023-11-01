@@ -34,10 +34,30 @@ export const Config = {
     settings: {
         youtube: [
             {
-                disabled: false,
+                disabled: true,
                 title: "Utan dina andetag - cover Rebecca Lennartsson",
                 src: "https://www.youtube.com/embed/SMLaPKJopuQ?controls=0&autoplay=1&mute=1",
-                allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+                local: false,
+                altText: null
+            }
+        ],
+        mp3: [
+            {
+                disabled: false,
+                title: "Ser du månen där du är ikväll? (Tillsammans igen)",
+                src: "tillsammans_igen.mp3",
+                allow: null,
+                local: true,
+                altText: "Ser du månen där du är ikväll? (Tillsammans igen) - cover Rebecca Lennartsson av Thomas Stenström"
+            },
+            {
+                disabled: true,
+                title: "Perfect",
+                src: "tillsammans_igen.mp3",
+                allow: null,
+                local: true,
+                altText: "perfect - cover Rebecca Lennartsson - av Ed Sheeran"
             }
         ],
         contact: {

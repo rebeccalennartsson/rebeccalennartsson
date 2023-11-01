@@ -45,7 +45,7 @@ export const Main = (props) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const { settings: { youtube } } = Config;
+    const { settings: { youtube, mp3 } } = Config;
 
     const frames = youtube
         .filter(y => !y.disabled)
@@ -60,11 +60,32 @@ export const Main = (props) => {
                     allow={y.allow}
                     allowFullScreen />
                 );
-            });
+        });
+
+    const audio = mp3
+        .filter(m => !m.disabled)
+        .map((m, key) => {
+            const { src , title, local, altText } = m;
+            const audioSrc = local ? require(`../audio/${src}`) : src;
+            return (
+                <section
+                    key={key}
+                    className="page-section"
+                >
+                    <h1 className="title">{title}</h1>
+
+                    <audio alt={altText} controls key={key}>
+                        <source src={audioSrc} type="audio/mpeg" />
+                        Your browser does not support the audio element.
+                    </audio>
+                </section>
+            );
+        });
 
     return (
         <div className={`App ${isInView ? 'page-section-wrapper' : ''}`}>
             {frames}
+            {audio}
             <Pages />
             <>{props.children}</>
         </div>
