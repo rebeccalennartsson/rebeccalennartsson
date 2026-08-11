@@ -1,7 +1,10 @@
 # https://www.robotstxt.org/robotstxt.html
-# Served at https://rebeccalennartsson.se/robots.txt — the domain root, which is the
-# only place crawlers read robots.txt from. Requires the CNAME file in public/ to keep
-# the custom domain attached on every gh-pages deploy.
+# NOTE: robots.txt is only honoured at a domain root. This is a GitHub Pages *project*
+# site, so the file is published to /rebeccalennartsson/robots.txt, which crawlers
+# ignore. Nothing here blocks anything, so behaviour is the same either way — but the
+# explicit AI-crawler allows and the Sitemap line below only take effect once the site
+# is served from the rebeccalennartsson.se apex (add public/CNAME back and point DNS at
+# GitHub). Until then, submit the sitemap URL manually in Google Search Console.
 
 User-agent: *
 Allow: /
@@ -57,4 +60,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: https://rebeccalennartsson.se/sitemap.xml
+Sitemap: https://rebeccalennartsson.github.io/rebeccalennartsson/sitemap.xml

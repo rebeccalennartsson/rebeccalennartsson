@@ -12,18 +12,23 @@ Create React App (react-scripts 5), yarn:
 
 There is no test setup. `@testing-library/*` and the default CRA test were removed deliberately (see **Dependencies**); do not add tests unless asked.
 
-## Deployment and the custom domain
+## Deployment
 
-The site is served from **https://rebeccalennartsson.se**, a GitHub Pages site fed by the `gh-pages` branch. `homepage` in `package.json` is the apex domain, so the build assumes it is hosted at `/` — asset paths come out as `/static/...`.
+The site is served from **https://rebeccalennartsson.github.io/rebeccalennartsson/**, a GitHub Pages *project* site fed by the `gh-pages` branch via `yarn deploy`. `homepage` in `package.json` sets that base path, so assets build as `/rebeccalennartsson/static/...`.
 
-Two files in `public/` exist only for GitHub Pages and must not be deleted:
+`public/.nojekyll` stops GitHub Pages running the published output through Jekyll. Keep it.
 
-- **`CNAME`** (contains `rebeccalennartsson.se`) — `gh-pages -d build` replaces the whole branch on every deploy, so without this file in the build output the custom domain gets detached and the site reverts to the `github.io` URL.
-- **`.nojekyll`** — stops GitHub Pages running the published output through Jekyll.
+**The `rebeccalennartsson.se` domain is not live yet, and the code is currently configured for the `github.io` URL instead.** The domain is registered and points at a registrar URL-forwarding service (`194.9.94.85`) that 302-redirects to the `github.io` address, so visitors get bounced and the address bar shows `github.io`.
 
-Because the domain is the apex, `robots.txt` and `sitemap.xml` land at the domain root, which is the only place crawlers read `robots.txt` from. Changing `homepage` back to a project-site URL (`…github.io/rebeccalennartsson`) would silently break that, plus the `/` logo link in `Menu.js` and every absolute URL in `index.html`.
+Switching to the apex domain is a coordinated change — doing only half of it takes the site down with a redirect loop (GitHub redirects `github.io` → the custom domain while the registrar redirects it straight back). To do it:
 
-The DNS side is configured at the registrar, not in this repo. It needs A records for the apex pointing at `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` (and the matching `2606:50c0:800{0,1,2,3}::153` AAAA records), a `www` CNAME to `rebeccalennartsson.github.io`, and **no URL-forwarding/redirect rule** — a registrar redirect is what makes the domain bounce to the `github.io` address instead of serving the site. Repo Settings → Pages must have the custom domain set and "Enforce HTTPS" enabled.
+1. **At the registrar first:** delete the URL-forwarding/redirect rule, then add A records for the apex pointing at `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` (optionally the matching `2606:50c0:800{0,1,2,3}::153` AAAA records, and a `www` CNAME to `rebeccalennartsson.github.io`). Confirm with `dig +short rebeccalennartsson.se A`.
+2. **Then in this repo:** add `public/CNAME` containing `rebeccalennartsson.se`, set `homepage` to `https://rebeccalennartsson.se`, and rewrite every absolute URL — canonical, `og:url`, `og:image`, `twitter:image`, all JSON-LD `@id`/`url` fields, `sitemap.xml`, the `Sitemap:` line and header note in `robots.txt` — plus the logo `href` in `Menu.js`.
+3. **Then:** `yarn deploy`, and set the custom domain + "Enforce HTTPS" in repo Settings → Pages.
+
+`CNAME` must live in `public/` rather than being set only in the repo settings, because `gh-pages -d build` replaces the whole branch on every deploy and would otherwise detach the domain.
+
+The payoff is not cosmetic: `robots.txt` is only honoured at a domain root, so on the current project-site URL it is inert (see **SEO**).
 
 ## Architecture
 
@@ -38,11 +43,11 @@ data fetching.
 
 **The `disabled` flag is the feature-flag mechanism.** Every entry in `pages`, `settings.youtube`, `settings.mp3`, and `settings.contact` has `disabled`; consumers `.filter(x => !x.disabled)` (or early-return `null`) rather than deleting entries. Keep disabled content in place instead of removing it — that is how sections are turned off between bookings/seasons.
 
-Component tree: `App` → `ConfigContext.Provider` → `Header` (just `Menu`) and `Main` (YouTube iframes → audio players → `Pages` sections → `Form`).
+Component tree: `App` → `ConfigContext.Provider` → `Header` (`Menu` + the hero tagline) and `Main`. `Main` composes the order explicitly: the first enabled page (`OM`) → YouTube iframes → audio players → the remaining pages → `Form`. That ordering is deliberate — see the SEO/UX note in `Main.js`; don't "tidy" the media back above the intro.
 
 `Main.js` resolves local MP3s with `require(\`../audio/${src}\`)` when `local: true`, so audio files must live in `src/audio/` and be bundled by webpack — a runtime string alone will not work.
 
-**Section anchors are derived from titles.** `Pages` sets `id={title.replaceAll(' ', '-')}` and `Menu`'s `Link` builds `href="#" + title.replaceAll(' ', '-')` unless an explicit `navigate` is passed (the contact link uses `navigate="form"`). Renaming a page title silently changes its anchor; both sides must agree.
+**Section anchors are derived from titles.** `PageSection` sets `id={title.replaceAll(' ', '-')}`, and `Menu` derives the same value through its `sectionIdFor` helper for both the link `href` and the `IntersectionObserver` that drives `aria-current` — unless an explicit `navigate` is passed (the contact link uses `navigate="form"`). Renaming a page title changes its anchor in all three places at once, which is the point; hardcoding an id anywhere breaks the current-section highlight silently.
 
 The contact form (`ContactForm.js`) does not POST anywhere — its `onSubmit` calls `preventDefault()` and then assembles a `mailto:` URL from the field values, setting `window.location.href`. The recipient comes from `Config.settings.contact.email`. Keep the `preventDefault()`: without it the form also runs its default GET submit and reloads the page.
 
@@ -82,10 +87,15 @@ therefore very easy to drop by accident.
 5. **One `<h1>`** (the `Menu` logo, her name) and `<h2>` per section. Every section used
    to be an `<h1>`, which flattens the hierarchy.
 6. **Absolute URLs everywhere** (canonical, `og:url`, `og:image`, every JSON-LD `@id`
-   and `url`) pointing at `https://rebeccalennartsson.se/`. These cannot be relative.
-7. **`robots.txt` + `sitemap.xml` at the domain root**, which only works because of the
-   custom domain (see **Deployment**). `robots.txt` explicitly allows the search and
-   AI/answer-engine crawlers.
+   and `url`) pointing at the live base URL — currently
+   `https://rebeccalennartsson.github.io/rebeccalennartsson/`. These cannot be relative,
+   and they all have to move together if the base URL changes.
+7. **`robots.txt` + `sitemap.xml`** exist and list the AI/answer-engine crawlers, but on
+   the current project-site URL `robots.txt` is **inert** — crawlers only read it from a
+   domain root. Nothing in it blocks anything, so behaviour is unaffected, but the
+   explicit allows and the `Sitemap:` line do nothing until the site moves to the
+   `rebeccalennartsson.se` apex (see **Deployment**). Submit the sitemap URL manually in
+   Google Search Console meanwhile.
 8. **Mobile performance is a ranking factor and most visitors are on phones.** The hero
    photo is the LCP element; it is a CSS background, so it is preloaded from
    `public/images/` via `<link rel="preload">` with `media` attributes, and the URLs are
@@ -102,6 +112,9 @@ crawlers and humans see different claims.
 
 **Known off-site gaps** (need Rebecca's input, not code):
 
+- **Getting `rebeccalennartsson.se` actually serving the site** (see **Deployment**) — an
+  apex domain reads as more credible than a `github.io` subpath and is what makes
+  `robots.txt` count.
 - **A Google Business Profile is probably the highest-value remaining action** for
   "sångerska Göteborg" — it is what puts her in the local/Maps results that sit above
   organic ones. Nothing in this repo can substitute for it.
