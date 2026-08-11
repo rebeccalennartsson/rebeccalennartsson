@@ -1,20 +1,206 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#22201e" />
+    <title>Sångerska Göteborg – Rebecca Lennartsson | Bröllop &amp; Dop</title>
     <meta
       name="description"
-      content="Rebecca Lennartsson - Sångerska - Bröllop - Begravning - Dop"
+      content="Boka sångerska i Göteborg med omnejd för bröllop, begravning och dop. Rebecca Lennartsson – utbildad musikalartist. Godkänd för F-skatt."
     />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <link rel="canonical" href="https://rebeccalennartsson.se/" />
+
+    <!-- The hero photo is the LCP element and is set as a CSS background, so without
+         these the browser cannot start fetching it until main.css has parsed. -->
+    <link rel="preload" as="image" href="%PUBLIC_URL%/images/portrait.webp" media="(max-width: 820px)" />
+    <link rel="preload" as="image" href="%PUBLIC_URL%/images/landscape.webp" media="(min-width: 821px)" />
+    <!-- Declared here, not in App.scss, so the paths match the preloads above and stay
+         unhashed. css-loader would otherwise try to resolve them as webpack modules. -->
+    <style>
+      :root {
+        --hero-portrait: url("%PUBLIC_URL%/images/portrait.webp");
+        --hero-landscape: url("%PUBLIC_URL%/images/landscape.webp");
+      }
+    </style>
+
+    <meta name="geo.region" content="SE-O" />
+    <meta name="geo.placename" content="Göteborg" />
+    <meta name="ICBM" content="57.7089, 11.9746" />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content="Rebecca Lennartsson" />
+    <meta property="og:locale" content="sv_SE" />
+    <meta property="og:url" content="https://rebeccalennartsson.se/" />
+    <meta property="og:title" content="Sångerska Göteborg – Rebecca Lennartsson | Bröllop &amp; Dop" />
+    <meta
+      property="og:description"
+      content="Boka sångerska i Göteborg med omnejd för bröllop, begravning och dop. Rebecca Lennartsson – utbildad musikalartist."
+    />
+    <meta property="og:image" content="https://rebeccalennartsson.se/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="Rebecca Lennartsson – sångerska i Göteborg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sångerska Göteborg – Rebecca Lennartsson" />
+    <meta
+      name="twitter:description"
+      content="Boka sångerska i Göteborg för bröllop, begravning och dop."
+    />
+    <meta name="twitter:image" content="https://rebeccalennartsson.se/og-image.jpg" />
+    <meta name="twitter:image:alt" content="Rebecca Lennartsson – sångerska i Göteborg" />
+
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <title>Rebecca Lennartsson</title>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://rebeccalennartsson.se/#website",
+            "url": "https://rebeccalennartsson.se/",
+            "name": "Rebecca Lennartsson – Sångerska i Göteborg",
+            "inLanguage": "sv-SE",
+            "publisher": { "@id": "https://rebeccalennartsson.se/#person" }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://rebeccalennartsson.se/#person",
+            "name": "Rebecca Lennartsson",
+            "givenName": "Rebecca",
+            "familyName": "Lennartsson",
+            "jobTitle": "Sångerska och musikalartist",
+            "description": "Rebecca Lennartsson är sångerska och utbildad musikalartist vid Balettakademien i Göteborg. Hon sjunger på bröllop, begravningar, dop och event i Göteborg med omnejd, Bohuslän, Halland, Dalsland, Skaraborg och norra Småland.",
+            "url": "https://rebeccalennartsson.se/",
+            "image": [
+              "https://rebeccalennartsson.se/og-image.jpg",
+              "https://rebeccalennartsson.se/logo512.png"
+            ],
+            "email": "mailto:rebeccalennartsson1@gmail.com",
+            "knowsLanguage": ["sv-SE", "en"],
+            "alumniOf": {
+              "@type": "EducationalOrganization",
+              "name": "Balettakademien i Göteborg"
+            },
+            "award": "Stipendium från Eduard Magnus Musikfond för fortsatta studier inom opera (2021)",
+            "homeLocation": {
+              "@type": "City",
+              "name": "Göteborg"
+            },
+            "worksFor": { "@id": "https://rebeccalennartsson.se/#service" }
+          },
+          {
+            "@type": "ProfessionalService",
+            "@id": "https://rebeccalennartsson.se/#service",
+            "name": "Rebecca Lennartsson – Sångerska",
+            "description": "Sångerska i Göteborg som anlitas för bröllop, begravning, dop och event i Göteborg med omnejd. Godkänd för F-skatt.",
+            "url": "https://rebeccalennartsson.se/",
+            "image": "https://rebeccalennartsson.se/og-image.jpg",
+            "email": "mailto:rebeccalennartsson1@gmail.com",
+            "founder": { "@id": "https://rebeccalennartsson.se/#person" },
+            "employee": { "@id": "https://rebeccalennartsson.se/#person" },
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Göteborg",
+              "addressRegion": "Västra Götalands län",
+              "addressCountry": "SE"
+            },
+            "areaServed": [
+              { "@type": "City", "name": "Göteborg" },
+              { "@type": "AdministrativeArea", "name": "Västra Götalands län" },
+              { "@type": "AdministrativeArea", "name": "Hallands län" },
+              { "@type": "AdministrativeArea", "name": "Bohuslän" },
+              { "@type": "AdministrativeArea", "name": "Dalsland" },
+              { "@type": "AdministrativeArea", "name": "Skaraborg" },
+              { "@type": "AdministrativeArea", "name": "Jönköpings län" },
+              { "@type": "City", "name": "Kungsbacka" },
+              { "@type": "City", "name": "Varberg" },
+              { "@type": "City", "name": "Borås" },
+              { "@type": "City", "name": "Alingsås" },
+              { "@type": "City", "name": "Kungälv" },
+              { "@type": "City", "name": "Trollhättan" },
+              { "@type": "City", "name": "Vänersborg" },
+              { "@type": "City", "name": "Uddevalla" },
+              { "@type": "City", "name": "Jönköping" }
+            ],
+            "makesOffer": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Sång vid bröllop i Göteborg",
+                  "serviceType": "Bröllopssång",
+                  "areaServed": { "@type": "City", "name": "Göteborg" }
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Sång vid begravning i Göteborg",
+                  "serviceType": "Begravningssång",
+                  "areaServed": { "@type": "City", "name": "Göteborg" }
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Sång vid dop i Göteborg",
+                  "serviceType": "Dopsång",
+                  "areaServed": { "@type": "City", "name": "Göteborg" }
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Sång vid event och firanden",
+                  "serviceType": "Eventsång",
+                  "areaServed": { "@type": "City", "name": "Göteborg" }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <noscript>
+      <h1>Rebecca Lennartsson – sångerska i Göteborg</h1>
+      <p>
+        Rebecca Lennartsson är utbildad musikalartist vid Balettakademien i Göteborg och har
+        studerat sång sedan 2010. Hon är verksam som sångerska i Göteborg med omnejd och tar emot
+        uppdrag i Bohuslän, Halland, Dalsland, Skaraborg och norra Småland – bland annat i
+        Kungsbacka, Varberg, Borås, Alingsås, Kungälv, Trollhättan, Vänersborg, Uddevalla och
+        Jönköping. Hon blev 2021 tilldelad ett stipendie från Eduard Magnus Musikfond för
+        fortsatta studier inom opera. Rebecca är godkänd för F-skatt.
+      </p>
+      <h2>Bröllop</h2>
+      <p>
+        Rebecca har många års erfarenhet av att sjunga på bröllop och har en bred repertoar. Hon
+        sjunger på bröllop i kyrkor och festlokaler i Göteborg med omnejd.
+      </p>
+      <h2>Begravning</h2>
+      <p>
+        Rebecca har flertalet gånger haft det ärofyllda uppdraget att genom sång hjälpa anhöriga
+        ta avsked. Hon medverkar vid begravningar i Göteborgs kyrkor och kapell.
+      </p>
+      <h2>Dop</h2>
+      <p>Rebecca sjunger vid dop i Göteborg och närliggande orter.</p>
+      <h2>Kontakt</h2>
+      <p>
+        Intresserad av att boka Rebecca för ert event? Kontakta
+        <a href="mailto:rebeccalennartsson1@gmail.com">rebeccalennartsson1@gmail.com</a>.
+      </p>
+    </noscript>
   </body>
 </html>

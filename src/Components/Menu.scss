@@ -1,99 +1,196 @@
-@use 'sass:math';
 @import '../Variables.scss';
 
 .menu {
     position: fixed;
-    z-index: 1;
+    z-index: 10;
     width: 100%;
+    top: 0;
+
+    a {
+        text-decoration: none;
+        color: $white;
+    }
+
+    h1 {
+        // Must be allowed to shrink, or it pushes the menu button off narrow screens.
+        flex: 1 1 auto;
+        min-width: 0;
+        margin: 0;
+        font-size: $fontSizeLogo;
+        font-weight: 100;
+        letter-spacing: 0.1em;
+        line-height: 1.1;
+        text-transform: uppercase;
+        color: $white;
+    }
 
     .navigation {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 12px;
+        min-height: $navHeight;
+        padding: 0 clamp(14px, 3.5vw, 24px);
+        padding-left: max(clamp(14px, 3.5vw, 24px), env(safe-area-inset-left));
+        padding-right: max(clamp(14px, 3.5vw, 24px), env(safe-area-inset-right));
+        transition: background-color 0.4s $ease, box-shadow 0.4s $ease;
 
-        div {
-            min-width: 470px;
+        > div {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: clamp(12px, 2vw, 24px);
+
             a {
-                margin: 0 0 0 $margin;
-                font-size: 28px;
+                font-size: 0.82em;
+                letter-spacing: 0.1em;
+                padding: 6px 2px;
+                border-bottom: 1px solid transparent;
+                transition: border-color 0.2s $ease, color 0.2s $ease;
+
                 &:hover {
-                    text-decoration: underline;
+                    border-bottom-color: $accent;
                 }
-                &:first-child {
-                    margin: 0;
+
+                &:focus-visible {
+                    outline: 2px solid $accent;
+                    outline-offset: 4px;
+                }
+
+                &.is-current {
+                    border-bottom-color: $accent;
+                    color: $white;
                 }
             }
-        }
-
-        .open-menu-btn {
-            margin: $margin;
-            text-align: center;
-            color: $black;
-            font-size: 30px;
-            text-decoration: none;
-            padding: math.div($padding, 2);
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.5);
-            min-width: 38px;
-            min-height: 38px;
-        }
-
-        .open-menu-btn-inverted {
-            color: $white;
-            background-color: $black;
         }
     }
 
     .navigation-inverted {
-        background-color: $white;
-        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-        transition: background-color 1s linear;
+        background-color: rgba($black, 0.82);
+        backdrop-filter: blur(14px) saturate(1.1);
+        -webkit-backdrop-filter: blur(14px) saturate(1.1);
+        box-shadow: 0 1px 0 $hairline, 0 10px 30px rgba(0, 0, 0, 0.28);
     }
 
-    .large {
-        padding: $padding;
+    .open-menu-btn {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        flex: 0 0 auto;
+        width: $tapTarget;
+        height: $tapTarget;
+        padding: 0;
+        background-color: rgba($white, 0.16);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba($white, 0.38);
+        border-radius: 50%;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: background-color 0.2s $ease;
+
+        &:focus-visible {
+            outline: 2px solid $accent;
+            outline-offset: 3px;
+        }
+
+        span {
+            display: block;
+            width: 18px;
+            height: 2px;
+            background-color: $white;
+            border-radius: 2px;
+        }
     }
 
-    a {
-        text-decoration: none;
-        color: $black;
+    .open-menu-btn-inverted {
+        background-color: rgba($white, 0.1);
     }
+
     .drop-down {
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: stretch;
         flex-direction: column;
-        background-color: $white;
+        gap: 4px;
+        height: 100vh;
+        height: 100dvh;
+        padding: calc(#{$navHeight} + env(safe-area-inset-top)) clamp(20px, 6vw, 40px)
+            calc(32px + env(safe-area-inset-bottom));
+        box-sizing: border-box;
+        background-color: rgba($black, 0.96);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        animation: drop-down-in 0.28s $ease both;
+
         a {
-            padding: $padding;
-            color: $black;
+            display: flex;
+            align-items: center;
+            min-height: $tapTarget;
+            padding: 10px 4px;
+            font-size: clamp(20px, 5.5vw, 28px);
+            font-weight: 100;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-bottom: 1px solid $hairline;
+
+            &:focus-visible {
+                outline: 2px solid $accent;
+                outline-offset: 2px;
+            }
+
+            &.is-current {
+                color: $accent;
+            }
         }
     }
 
-    h1 {
-        color: $black;
-        margin: 0 $margin;
-        font-size: 45px;
-        text-transform: uppercase;
-        word-break: break-word;
-        -webkit-hyphens: auto;
-        -moz-hyphens: auto;
-        hyphens: auto;
+    .close-menu-btn {
+        position: absolute;
+        top: max(10px, env(safe-area-inset-top));
+        right: clamp(14px, 3.5vw, 24px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: $tapTarget;
+        height: $tapTarget;
+        font-size: 26px;
+        font-weight: 100;
+        line-height: 1;
+        color: $white;
+        background: none;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+
+        &:focus-visible {
+            outline: 2px solid $accent;
+            outline-offset: 2px;
+        }
     }
-    @media (max-width: $mediaQueryBrake) {
-        h1 {
-            font-size: 30px;
-        }
-        a {
-            color: $white;
-        }
-        .navigation-inverted {
-            a {
-                color: $black;
-            }
-        }
+}
+
+@keyframes drop-down-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (min-width: $mediaQueryBrake) {
+    .menu .large {
+        padding-top: $padding;
+        padding-bottom: $padding;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .menu .drop-down {
+        animation: none;
     }
 }

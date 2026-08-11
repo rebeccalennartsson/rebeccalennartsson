@@ -2,33 +2,16 @@ import { React, useContext, useState, useEffect } from 'react';
 import { ConfigContext } from '../Server/ConfigContext';
 import { Form } from './ContactForm';
 
-const Pages = () => {
-    const getText = texts => texts.map((t, k) => <p key={k}>{t}</p>)
-
-    const { Config } = useContext(ConfigContext);
-    const pages = Config.pages.filter(p => !p.disabled);
-    const sections = pages.map((p, key) => {
-        const { title, texts } = p;
-        return (
-            <section
-                id={title.replaceAll(' ', '-')}
-                className="page-section"
-                key={key}
-            >
-                <h1 className="title">{title}</h1>
-
-                <div className="text">
-                    {getText(texts)}
-                </div>
-            </section>
-        );
-    });
-
+const PageSection = (props) => {
+    const { title, texts } = props;
     return (
-        <>
-            {sections}
-            <Form />
-        </>
+        <section id={title.replaceAll(' ', '-')} className="page-section">
+            <h2 className="title">{title}</h2>
+
+            <div className="text">
+                {texts.map((t, k) => <p key={k}>{t}</p>)}
+            </div>
+        </section>
     );
 };
 
@@ -51,15 +34,16 @@ export const Main = (props) => {
         .filter(y => !y.disabled)
         .map((y, key) => {
             return (
-                <iframe
-                    key={key}
-                    className="show-reel"
-                    src={y.src}
-                    title={y.title}
-                    frameBorder="0"
-                    allow={y.allow}
-                    allowFullScreen />
-                );
+                <section className="page-section" key={key}>
+                    <iframe
+                        className="show-reel"
+                        src={y.src}
+                        title={y.title}
+                        frameBorder="0"
+                        allow={y.allow}
+                        allowFullScreen />
+                </section>
+            );
         });
 
     const audio = mp3
@@ -72,9 +56,9 @@ export const Main = (props) => {
                     key={key}
                     className="page-section"
                 >
-                    <h1 className="title">{title}</h1>
+                    <h2 className="title">{title}</h2>
 
-                    <audio alt={altText} controls key={key}>
+                    <audio aria-label={altText} preload="metadata" controls>
                         <source src={audioSrc} type="audio/mpeg" />
                         Your browser does not support the audio element.
                     </audio>
@@ -82,12 +66,19 @@ export const Main = (props) => {
             );
         });
 
+    // Intro leads so visitors read who she is before meeting a media player.
+    const [intro, ...remainingPages] = Config.pages.filter(p => !p.disabled);
+
     return (
-        <div className={`App ${isInView ? 'page-section-wrapper' : ''}`}>
+        <main className={`App ${isInView ? 'page-section-wrapper' : ''}`}>
+            {intro ? <PageSection title={intro.title} texts={intro.texts} /> : null}
             {frames}
             {audio}
-            <Pages />
+            {remainingPages.map((p, key) => (
+                <PageSection key={key} title={p.title} texts={p.texts} />
+            ))}
+            <Form />
             <>{props.children}</>
-        </div>
+        </main>
     );
 };

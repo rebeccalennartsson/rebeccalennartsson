@@ -1,3 +1,60 @@
 # https://www.robotstxt.org/robotstxt.html
+# Served at https://rebeccalennartsson.se/robots.txt — the domain root, which is the
+# only place crawlers read robots.txt from. Requires the CNAME file in public/ to keep
+# the custom domain attached on every gh-pages deploy.
+
 User-agent: *
-Disallow:
+Allow: /
+
+# Search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# AI assistants and answer engines — explicitly allowed so the site can be
+# surfaced and cited when people ask for a singer in Gothenburg.
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://rebeccalennartsson.se/sitemap.xml

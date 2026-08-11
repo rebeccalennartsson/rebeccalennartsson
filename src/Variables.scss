@@ -1,8 +1,20 @@
-$fontSize: calc(10px + 2vmin);
+$fontSize: clamp(16px, 0.95rem + 0.35vw, 19px);
+$fontSizeTitle: clamp(25px, 1.3rem + 2.1vw, 38px);
+$fontSizeLogo: clamp(18px, 0.9rem + 2.2vw, 38px);
 $margin: 16px;
 $padding: 16px;
-$maxWith: 800px;
-$transparent: rgba(255, 255, 255, 0.4);
-$black: #333333;
-$white: #dddddd;
+$maxWith: 780px;
+$black: #22201e;
+$white: #f6f4f1;
 $mediaQueryBrake: 821px;
+
+$accent: #b08d57;
+$requiredMark: #e08b7a;
+$muted: rgba($white, 0.68);
+$hairline: rgba($white, 0.14);
+$radius: 16px;
+$radiusSmall: 10px;
+$shadowSoft: 0 1px 2px rgba(0, 0, 0, 0.06), 0 10px 30px rgba(0, 0, 0, 0.14);
+$ease: cubic-bezier(0.4, 0, 0.2, 1);
+$tapTarget: 44px;
+$navHeight: 64px;

@@ -1,14 +1,18 @@
+import { useContext } from 'react';
 import { Menu } from './Menu';
-import SEO from '../Server/SEO';
+import { ConfigContext } from '../Server/ConfigContext';
+
 const Header = () => {
+    const { Config } = useContext(ConfigContext);
+    const { tagline, services } = Config.settings.hero;
+
     return (
         <header className="App-header">
-            <SEO
-                title="Rebecca är utbildad sångerska och musikalartist vid Balettakademien i Göteborg."
-                description="Rebecca hjälper er med sång på erat kommande bröllop, dop, begravning eller event! Godkänd för F-skatt."
-                name="Rebecca Lennartsson"
-                type="article" />
             <Menu />
+            <div className="hero-intro">
+                <p className="hero-tagline">{tagline}</p>
+                <p className="hero-services">{services}</p>
+            </div>
         </header>
     );
 };
