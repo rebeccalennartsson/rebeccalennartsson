@@ -1,6 +1,8 @@
 {
   "short_name": "Rebecca Lennartsson",
-  "name": "Rebecca Lennartsson - Sångerska - Bröllop - Begravning - Dop",
+  "name": "Rebecca Lennartsson – Sångerska i Göteborg",
+  "description": "Sångerska i Göteborg för bröllop, begravning, dop och event.",
+  "lang": "sv-SE",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +22,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#22201e",
+  "background_color": "#22201e"
 }
