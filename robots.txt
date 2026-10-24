@@ -1,10 +1,6 @@
 # https://www.robotstxt.org/robotstxt.html
-# NOTE: robots.txt is only honoured at a domain root. This is a GitHub Pages *project*
-# site, so the file is published to /rebeccalennartsson/robots.txt, which crawlers
-# ignore. Nothing here blocks anything, so behaviour is the same either way — but the
-# explicit AI-crawler allows and the Sitemap line below only take effect once the site
-# is served from the rebeccalennartsson.se apex (add public/CNAME back and point DNS at
-# GitHub). Until then, submit the sitemap URL manually in Google Search Console.
+# Served from the rebeccalennartsson.se apex, so crawlers read this file (robots.txt
+# is only honoured at a domain root).
 
 User-agent: *
 Allow: /
@@ -60,4 +56,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: https://rebeccalennartsson.github.io/rebeccalennartsson/sitemap.xml
+Sitemap: https://rebeccalennartsson.se/sitemap.xml
