@@ -60,7 +60,7 @@ export const Main = (props) => {
 
                     <audio aria-label={altText} preload="metadata" controls>
                         <source src={audioSrc} type="audio/mpeg" />
-                        Your browser does not support the audio element.
+                        Din webbläsare kan inte spela upp ljudet.
                     </audio>
                 </section>
             );

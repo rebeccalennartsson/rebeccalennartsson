@@ -13,6 +13,7 @@
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "postbuild": "node scripts/prerender.js",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
