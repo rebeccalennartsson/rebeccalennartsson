@@ -115,8 +115,8 @@ humans see different claims.
 - **A Google Business Profile is probably the highest-value remaining action** for
   "sångerska Göteborg" — it is what puts her in the local/Maps results that sit above
   organic ones. Nothing in this repo can substitute for it.
-- **`sameAs` links** to her Instagram / Facebook / YouTube are missing from the `Person`
-  node. These are the strongest signal for tying the site to a real, verifiable person.
+- **`sameAs` links**: Instagram is on the `Person` node; Facebook / YouTube are still
+  missing. These are the strongest signal for tying the site to a real, verifiable person.
   Add them as soon as the URLs are known.
 - **No `telephone`, `priceRange`, reviews, or FAQ content.** All would strengthen the
   structured data; none may be invented. Get real values before adding them.
