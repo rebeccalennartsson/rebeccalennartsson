@@ -14,21 +14,13 @@ There is no test setup. `@testing-library/*` and the default CRA test were remov
 
 ## Deployment
 
-The site is served from **https://rebeccalennartsson.github.io/rebeccalennartsson/**, a GitHub Pages *project* site fed by the `gh-pages` branch via `yarn deploy`. `homepage` in `package.json` sets that base path, so assets build as `/rebeccalennartsson/static/...`.
+The site is served from **https://rebeccalennartsson.se**, a GitHub Pages site fed by the `gh-pages` branch via `yarn deploy`. `homepage` in `package.json` is that apex, so assets build from `/`. The old `https://rebeccalennartsson.github.io/rebeccalennartsson/` address 301-redirects to it.
+
+DNS is at Loopia (`ns1/ns2.loopia.se`): four A records on `@` → `185.199.108.153`–`.111.153`, and `www` CNAME → `rebeccalennartsson.github.io` (GitHub 301s `www` to the apex). "Enforce HTTPS" is on in repo Settings → Pages. Do not turn Loopia's URL forwarding back on — "masked" forwarding serves an empty frame page to crawlers, and plain forwarding loops against GitHub's own redirect.
+
+`public/CNAME` (containing `rebeccalennartsson.se`) must stay, because `gh-pages -d build` replaces the whole branch on every deploy and would otherwise detach the domain.
 
 `public/.nojekyll` stops GitHub Pages running the published output through Jekyll. Keep it.
-
-**The `rebeccalennartsson.se` domain is not live yet, and the code is currently configured for the `github.io` URL instead.** The domain is registered and points at a registrar URL-forwarding service (`194.9.94.85`) that 302-redirects to the `github.io` address, so visitors get bounced and the address bar shows `github.io`.
-
-Switching to the apex domain is a coordinated change — doing only half of it takes the site down with a redirect loop (GitHub redirects `github.io` → the custom domain while the registrar redirects it straight back). To do it:
-
-1. **At the registrar first:** delete the URL-forwarding/redirect rule, then add A records for the apex pointing at `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` (optionally the matching `2606:50c0:800{0,1,2,3}::153` AAAA records, and a `www` CNAME to `rebeccalennartsson.github.io`). Confirm with `dig +short rebeccalennartsson.se A`.
-2. **Then in this repo:** add `public/CNAME` containing `rebeccalennartsson.se`, set `homepage` to `https://rebeccalennartsson.se`, and rewrite every absolute URL — canonical, `og:url`, `og:image`, `twitter:image`, all JSON-LD `@id`/`url` fields, `sitemap.xml`, the `Sitemap:` line and header note in `robots.txt` — plus the logo `href` in `Menu.js`.
-3. **Then:** `yarn deploy`, and set the custom domain + "Enforce HTTPS" in repo Settings → Pages.
-
-`CNAME` must live in `public/` rather than being set only in the repo settings, because `gh-pages -d build` replaces the whole branch on every deploy and would otherwise detach the domain.
-
-The payoff is not cosmetic: `robots.txt` is only honoured at a domain root, so on the current project-site URL it is inert (see **SEO**).
 
 ## Architecture
 
@@ -70,11 +62,19 @@ therefore very easy to drop by accident.
    worst SEO bug this site has had.
 2. **Real HTML for non-JS crawlers.** The app is client-rendered, so a crawler that does
    not execute JavaScript sees only `<div id="root"></div>` — and most AI crawlers don't
-   execute JavaScript. `public/index.html` therefore statically carries the title,
-   description, canonical, geo meta, OG/Twitter tags, the JSON-LD `@graph`, and a
-   `<noscript>` block mirroring the visible copy. **On a rebuild, either keep static tags
-   or switch to a prerendered/SSG stack.** A client-only rewrite that drops these is a
-   silent, total regression in AI discoverability.
+   execute JavaScript. `public/index.html` statically carries the title, description,
+   canonical, geo meta, OG/Twitter tags and the JSON-LD `@graph`, and
+   `scripts/prerender.js` (`postbuild`) renders `<App />` into `#root` using the Babel
+   that ships with react-scripts. `index.js` uses `createRoot`, not `hydrateRoot`, so the
+   bundle simply replaces that markup. AI fetchers (ChatGPT included) also drop
+   `<noscript>`, scripts and meta, so **the prerendered markup is the only copy they
+   read** — before it existed they saw a title and nothing else. **On a rebuild, keep
+   static tags and a prerendered/SSG body.** A client-only rewrite is a silent, total
+   regression in AI discoverability.
+
+   To check what AI assistants see, fetch the live URL with an AI fetch tool (Claude
+   Code's `WebFetch` works) and ask for the body text verbatim. `curl` with a ChatGPT
+   user agent is no substitute — it returns 200 and the raw HTML either way.
 3. **The local keyword must appear in real, visible content** — not just meta tags. The
    hero tagline (`Config.settings.hero`) renders "Sångerska i Göteborg" above the fold,
    the `OM` section names the city and the surrounding towns, and each service section
@@ -88,14 +88,11 @@ therefore very easy to drop by accident.
    to be an `<h1>`, which flattens the hierarchy.
 6. **Absolute URLs everywhere** (canonical, `og:url`, `og:image`, every JSON-LD `@id`
    and `url`) pointing at the live base URL — currently
-   `https://rebeccalennartsson.github.io/rebeccalennartsson/`. These cannot be relative,
+   `https://rebeccalennartsson.se/`. These cannot be relative,
    and they all have to move together if the base URL changes.
-7. **`robots.txt` + `sitemap.xml`** exist and list the AI/answer-engine crawlers, but on
-   the current project-site URL `robots.txt` is **inert** — crawlers only read it from a
-   domain root. Nothing in it blocks anything, so behaviour is unaffected, but the
-   explicit allows and the `Sitemap:` line do nothing until the site moves to the
-   `rebeccalennartsson.se` apex (see **Deployment**). Submit the sitemap URL manually in
-   Google Search Console meanwhile.
+7. **`robots.txt` + `sitemap.xml`** exist at the domain root, and `robots.txt` explicitly
+   allows the AI/answer-engine crawlers and points at the sitemap. Bump the sitemap
+   `lastmod` when the copy changes.
 8. **Mobile performance is a ranking factor and most visitors are on phones.** The hero
    photo is the LCP element; it is a CSS background, so it is preloaded from
    `public/images/` via `<link rel="preload">` with `media` attributes, and the URLs are
@@ -106,15 +103,15 @@ therefore very easy to drop by accident.
    planning — a square image gets cropped or downgraded to a small card.
 
 **The one maintenance trap:** `public/index.html` and `src/Server/Config.js` both contain
-the same copy. When you change a page's text in `Config.js`, update the `<noscript>` block
-and the JSON-LD `description` fields to match. Nothing enforces this, and drift means
-crawlers and humans see different claims.
+overlapping claims. The page body is prerendered from `Config.js`, but the JSON-LD
+`description` fields (and the meta/OG descriptions) are hand-written — when you change a
+page's text, update them to match. Nothing enforces this, and drift means crawlers and
+humans see different claims.
 
 **Known off-site gaps** (need Rebecca's input, not code):
 
-- **Getting `rebeccalennartsson.se` actually serving the site** (see **Deployment**) — an
-  apex domain reads as more credible than a `github.io` subpath and is what makes
-  `robots.txt` count.
+- **Indexing:** the `.se` property needs to be verified in Google Search Console and Bing
+  Webmaster Tools (ChatGPT search leans on Bing's index), with the sitemap submitted.
 - **A Google Business Profile is probably the highest-value remaining action** for
   "sångerska Göteborg" — it is what puts her in the local/Maps results that sit above
   organic ones. Nothing in this repo can substitute for it.

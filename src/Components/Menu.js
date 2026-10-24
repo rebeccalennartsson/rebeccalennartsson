@@ -7,7 +7,7 @@ const sectionIdFor = title => title.replaceAll(' ', '-');
 const TextLogo = () => {
     return (
         <h1>
-            <a href="/rebeccalennartsson/">Rebecca Lennartsson</a>
+            <a href="/">Rebecca Lennartsson</a>
         </h1>
     )
 }
