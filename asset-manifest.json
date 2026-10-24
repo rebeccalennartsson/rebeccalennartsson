@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/rebeccalennartsson/static/css/main.8690eeff.css",
-    "main.js": "/rebeccalennartsson/static/js/main.c749cf32.js",
+    "main.js": "/rebeccalennartsson/static/js/main.e51605c8.js",
     "static/media/tillsammans_igen.mp3": "/rebeccalennartsson/static/media/tillsammans_igen.8e6cf1e40bfaea04dbe7.mp3",
     "static/media/roboto-latin-100.woff2": "/rebeccalennartsson/static/media/roboto-latin-100.c2aa4ab115bf9c6057cb.woff2",
     "static/media/roboto-latin-300.woff2": "/rebeccalennartsson/static/media/roboto-latin-300.37a7069dc30fc663c878.woff2",
     "static/media/roboto-latin-400.woff2": "/rebeccalennartsson/static/media/roboto-latin-400.176f8f5bd5f02b3abfcf.woff2",
     "index.html": "/rebeccalennartsson/index.html",
     "main.8690eeff.css.map": "/rebeccalennartsson/static/css/main.8690eeff.css.map",
-    "main.c749cf32.js.map": "/rebeccalennartsson/static/js/main.c749cf32.js.map"
+    "main.e51605c8.js.map": "/rebeccalennartsson/static/js/main.e51605c8.js.map"
   },
   "entrypoints": [
     "static/css/main.8690eeff.css",
-    "static/js/main.c749cf32.js"
+    "static/js/main.e51605c8.js"
   ]
 }
