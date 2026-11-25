@@ -11,6 +11,10 @@ Vite + React 19, yarn. (Migrated off the deprecated Create React App in 2026-11.
 - `yarn build` — three steps: the client build to `build/`, the server bundle
   (`src/entry-server.jsx`) to `build-ssr/`, then `scripts/prerender.js` writes the HTML.
 - `yarn preview` — serves `build/` locally, prerendered pages included.
+
+Measure speed with Lighthouse on the live site or `yarn preview`, never on `yarn start`.
+The dev server sends about 33 unminified files and scores around 55 on mobile; the same
+code scored 100 live (2026-11-25).
 - `yarn deploy` — builds (via `predeploy`) and publishes `build/` to the `gh-pages` branch
 
 JSX lives in `.jsx` files; Vite does not parse JSX in `.js`. There is no test setup and no
@@ -25,6 +29,8 @@ DNS is at Loopia (`ns1/ns2.loopia.se`): four A records on `@` → `185.199.108.1
 `public/CNAME` (containing `rebeccalennartsson.se`) must stay, because `gh-pages -d build` replaces the whole branch on every deploy and would otherwise detach the domain.
 
 `public/.nojekyll` stops GitHub Pages running the published output through Jekyll. Keep it.
+
+`yarn deploy` passes `--dotfiles`, because gh-pages otherwise skips `.nojekyll`. It was never published until 2026-11-25. The script first deletes `.DS_Store` files from `build/`, which macOS drops into `public/`. gh-pages' cleanup step doesn't remove dotfiles that are already published, so a stray one has to be removed from the `gh-pages` branch by hand.
 
 ## Architecture
 
