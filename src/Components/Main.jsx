@@ -1,4 +1,4 @@
-import { React, Fragment, useContext, useState, useEffect } from 'react';
+import { Fragment, useContext } from 'react';
 import { ConfigContext } from '../Server/ConfigContext';
 import { Form } from './ContactForm';
 
@@ -62,17 +62,6 @@ const ServiceArticle = ({ page, otherPages }) => {
 
 export const Main = (props) => {
     const { Config, servicePage } = useContext(ConfigContext);
-    const [isInView, setIsInView] = useState(false);
-    const handleScroll = () => {
-        const position = window.pageYOffset;
-        setIsInView((window.innerHeight / 2) < position);
-    };
-
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
     const { settings: { youtube, mp3 } } = Config;
 
     const frames = youtube
@@ -117,7 +106,7 @@ export const Main = (props) => {
     const linkedPageFor = p => (p.slug ? p : null);
 
     return (
-        <main className={`App ${isInView ? 'page-section-wrapper' : ''}`}>
+        <main className="App">
             {servicePage ? (
                 <ServiceArticle
                     page={servicePage}
