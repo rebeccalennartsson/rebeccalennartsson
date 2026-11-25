@@ -4,13 +4,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-Create React App (react-scripts 5), yarn:
+Vite + React 19, yarn. (Migrated off the deprecated Create React App in 2026-11.)
 
-- `yarn start` — dev server on http://localhost:3000 (serves from `/`)
-- `yarn build` — production build to `build/`
+- `yarn start` — Vite dev server on http://localhost:3000, or the next free port. It
+  serves an empty `#root` and renders on the client; the prerender only runs on build.
+- `yarn build` — three steps: the client build to `build/`, the server bundle
+  (`src/entry-server.jsx`) to `build-ssr/`, then `scripts/prerender.js` writes the HTML.
+- `yarn preview` — serves `build/` locally, prerendered pages included.
 - `yarn deploy` — builds (via `predeploy`) and publishes `build/` to the `gh-pages` branch
 
-There is no test setup. `@testing-library/*` and the default CRA test were removed deliberately (see **Dependencies**); do not add tests unless asked.
+JSX lives in `.jsx` files; Vite does not parse JSX in `.js`. There is no test setup and no
+linter; do not add tests unless asked.
 
 ## Deployment
 
@@ -30,7 +34,7 @@ user-facing copy is Swedish. There is no router library, no backend, and no data
 
 **Pages:** the home page (`/`) plus one landing page per service — `/brollop/`,
 `/begravning/`, `/dop/`, `/event/`. A `pages` entry with a `slug` and an `article` (meta
-title/description, `<h1>` heading, sections, FAQ) gets its own page. `index.js` passes
+title/description, `<h1>` heading, sections, FAQ) gets its own page. `index.jsx` passes
 `window.location.pathname` to `App`, which resolves it with `servicePageForPath` and puts
 the match in context as `servicePage` (`null` on home). Header, Menu, Main and the
 contact form branch on it: on a service page the heading is the `<h1>` (the logo becomes a
@@ -39,17 +43,17 @@ the matching subject. Each home section with a slug links to its page.
 
 **Content is data, not markup.** `src/Server/Config.js` exports one `Config` object that drives everything rendered: the `pages` array becomes both the page sections and the nav links, and `settings` controls the YouTube embeds, MP3 players, and contact form. Content and feature-flag changes belong in that file, not in components. Despite the `Server/` folder name, it is a static import — nothing is fetched.
 
-`Config` reaches components through `src/Server/ConfigContext.js`. `App.js` (the only class component) puts it in state and provides it; every consumer reads it with `useContext(ConfigContext)`.
+`Config` reaches components through `src/Server/ConfigContext.js`. `App.jsx` (the only class component) puts it in state and provides it; every consumer reads it with `useContext(ConfigContext)`.
 
 **The `disabled` flag is the feature-flag mechanism.** Every entry in `pages`, `settings.youtube`, `settings.mp3`, and `settings.contact` has `disabled`; consumers `.filter(x => !x.disabled)` (or early-return `null`) rather than deleting entries. Keep disabled content in place instead of removing it — that is how sections are turned off between bookings/seasons.
 
-Component tree: `App` → `ConfigContext.Provider` → `Header` (`Menu` + the hero tagline) and `Main`. `Main` composes the order explicitly: the first enabled page (`OM`) → YouTube iframes → audio players → the remaining pages → `Form`. That ordering is deliberate — see the SEO/UX note in `Main.js`; don't "tidy" the media back above the intro.
+Component tree: `App` → `ConfigContext.Provider` → `Header` (`Menu` + the hero tagline) and `Main`. `Main` composes the order explicitly: the first enabled page (`OM`) → YouTube iframes → audio players → the remaining pages → `Form`. That ordering is deliberate — see the SEO/UX note in `Main.jsx`; don't "tidy" the media back above the intro.
 
-`Main.js` resolves local MP3s with `require(\`../audio/${src}\`)` when `local: true`, so audio files must live in `src/audio/` and be bundled by webpack — a runtime string alone will not work.
+`Main.jsx` resolves local MP3s through `import.meta.glob('../audio/*.mp3')` when `local: true`, so audio files must live in `src/audio/` and be bundled by Vite — a runtime string alone will not work.
 
-**Section anchors are derived from titles.** `PageSection` sets `id={title.replaceAll(' ', '-')}`, and `Menu` derives the same value through its `sectionIdFor` helper for both the link `href` and the `IntersectionObserver` that drives `aria-current` — unless an explicit `navigate` is passed (the contact link uses `navigate="form"`). Renaming a page title changes its anchor in all three places at once, which is the point; hardcoding an id anywhere breaks the current-section highlight silently.
+**Section anchors are derived from titles.** `PageSection` sets `id={title.replaceAll(' ', '-')}`, and `Menu` derives the same value through its `sectionIdFor` helper for both the link `href` and the `IntersectionObserver` that drives `aria-current` (the contact link uses `#form`). Renaming a page title changes its anchor in all three places at once, which is the point; hardcoding an id anywhere breaks the current-section highlight silently.
 
-The contact form (`ContactForm.js`) does not POST anywhere — its `onSubmit` calls `preventDefault()` and then assembles a `mailto:` URL from the field values, setting `window.location.href`. The recipient comes from `Config.settings.contact.email`. Keep the `preventDefault()`: without it the form also runs its default GET submit and reloads the page.
+The contact form (`ContactForm.jsx`) does not POST anywhere — its `onSubmit` calls `preventDefault()` and then assembles a `mailto:` URL from the field values, setting `window.location.href`. The recipient comes from `Config.settings.contact.email`. Keep the `preventDefault()`: without it the form also runs its default GET submit and reloads the page.
 
 ## SEO — read this before changing anything
 
@@ -70,11 +74,13 @@ therefore very easy to drop by accident.
    worst SEO bug this site has had.
 2. **Real HTML for non-JS crawlers.** The app is client-rendered, so a crawler that does
    not execute JavaScript sees only `<div id="root"></div>` — and most AI crawlers don't
-   execute JavaScript. `public/index.html` statically carries the title, description,
-   canonical, geo meta, OG/Twitter tags and the JSON-LD `@graph`, and
-   `scripts/prerender.js` (`postbuild`) renders `<App />` into `#root` using the Babel
-   that ships with react-scripts. `index.js` uses `createRoot`, not `hydrateRoot`, so the
-   bundle simply replaces that markup. AI fetchers (ChatGPT included) also drop
+   execute JavaScript. `index.html` (repo root, as Vite expects) statically carries the
+   title, description, canonical, geo meta, OG/Twitter tags and the JSON-LD `@graph`, and
+   `scripts/prerender.js` renders `<App />` into `#root` through the Vite server bundle.
+   `index.jsx` then **hydrates** that markup (`hydrateRoot`), so the first client render
+   must match the server output: nothing may read `window` during render. The prerender
+   also inlines the stylesheet into each page and preloads the two font weights on the
+   phone's first screen (100 and 400, `FIRST_SCREEN_FONT_WEIGHTS`). AI fetchers (ChatGPT included) also drop
    `<noscript>`, scripts and meta, so **the prerendered markup is the only copy they
    read** — before it existed they saw a title and nothing else. It also writes
    `build/<slug>/index.html` for every service page, rewriting the title, description,
@@ -111,12 +117,12 @@ therefore very easy to drop by accident.
    photo is the LCP element; it is a CSS background, so it is preloaded from
    `public/images/` via `<link rel="preload">` with `media` attributes, and the URLs are
    declared as `--hero-*` custom properties in `index.html` so they stay unhashed and
-   match the preload hints. Don't move these back into the webpack pipeline without
+   match the preload hints. Don't move these into the bundler pipeline without
    replacing the preload.
 9. **`og-image.jpg` is 1200×630.** Link previews are how the site spreads through wedding
    planning — a square image gets cropped or downgraded to a small card.
 
-**The one maintenance trap:** `public/index.html` and `src/Server/Config.js` both contain
+**The one maintenance trap:** `index.html` and `src/Server/Config.js` both contain
 overlapping claims (service pages are exempt — their head tags and JSON-LD are generated). The page body is prerendered from `Config.js`, but the JSON-LD
 `description` fields (and the meta/OG descriptions) are hand-written — when you change a
 page's text, update them to match. Nothing enforces this, and drift means crawlers and
@@ -141,11 +147,11 @@ Sass with shared design tokens in `src/Variables.scss` (imported by `App.scss` a
 
 **The CSS is mobile-first**: base rules target phones and `@media (min-width: $mediaQueryBrake)` layers on the desktop treatment. Don't add `max-width` queries — it inverts the cascade the rest of the file assumes.
 
-The 821px breakpoint exists in two places: as `$mediaQueryBrake` in Sass, and as the `MEDIA_QUERY_BRAKE` constant in `Menu.js`, which switches between the desktop nav and the mobile hamburger/drop-down via a `resize` listener. Keep the two in sync. They agree at the boundary: CSS applies desktop from `min-width: 821px` and JS treats `>= 821` as desktop.
+The 821px breakpoint exists in two places: as `$mediaQueryBrake` in Sass, and as the `MEDIA_QUERY_BRAKE` constant in `Menu.jsx`. CSS alone decides whether the desktop links or the hamburger show — both are always in the markup, so the prerendered page is right at every width and nothing jumps on load. The JS constant only sets `isPhone` (after mount, via a `resize` listener), which gates the mobile overlay. Keep the two in sync. They agree at the boundary: CSS applies desktop from `min-width: 821px` and JS treats `>= 821` as desktop.
 
 The nav logo (`.menu h1`) must keep `flex: 1 1 auto` and `min-width: 0`. Without them it cannot shrink, and on a ~390px phone it pushes the hamburger button off the right edge — leaving no way to navigate. It wraps to two lines on narrow screens by design.
 
-`Menu.js` locks `document.body.style.overflow` while the mobile overlay is open. That effect must stay keyed on `isPhone` as well as `isOpen`: widening past the breakpoint with the overlay open unmounts it, and if the lock is not released the page cannot be scrolled at all.
+`Menu.jsx` locks `document.body.style.overflow` while the mobile overlay is open. That effect must stay keyed on `isPhone` as well as `isOpen`: widening past the breakpoint with the overlay open unmounts it, and if the lock is not released the page cannot be scrolled at all.
 
 Fonts are self-hosted in `src/fonts/` with `@font-face` rules in `src/fonts.scss` — three woff2 files (weights 100/300/400), which are the only weights the stylesheets use. `font-weight: 200` is not available; declaring it silently renders as 100.
 
@@ -153,11 +159,12 @@ The hero tagline (`.hero-intro`) sits over the photo, and the landscape image is
 
 ## Dependencies
 
-Kept deliberately small — `react`, `react-dom`, `react-scripts`, plus `sass` and `gh-pages` as devDependencies. Previously removed, with the reasoning, so they don't get reintroduced by habit:
+Kept deliberately small — `react`, `react-dom`, plus `vite`, `@vitejs/plugin-react`, `sass` and `gh-pages` as devDependencies. Versions are pinned exactly. Previously removed, with the reasoning, so they don't get reintroduced by habit:
 
 - **`react-helmet-async`** — redundant once `index.html` carries the real tags (see **SEO**).
 - **`web-vitals`** — `reportWebVitals()` was called with no callback, so it was a no-op that still emitted a lazy chunk.
 - **`typeface-roboto`** — deprecated, and it bundled all 24 of its files (~480 kB) to use three weights. Replaced by `src/fonts/`.
 - **`@testing-library/{jest-dom,react,user-event}`** — only consumed by the default CRA test, which asserted a "learn react" link that never existed here.
+- **`react-scripts`** — Create React App is deprecated and 5.0.1 was its last release; its build-time dependency tree carried 534 audit findings. Replaced by Vite.
 
-The deployed payload is dominated by `src/audio/tillsammans_igen.mp3` at **7.3 MB** — the rest of the build is ~1.2 MB. It is `preload="metadata"`, so it is not fetched until play, but re-encoding it lower would shrink the deploy substantially.
+The deployed payload is dominated by `src/audio/tillsammans_igen.mp3` at **7.3 MB** — the rest of the build is well under 1 MB. It is `preload="metadata"`, so it is not fetched until play, but re-encoding it lower would shrink the deploy substantially.

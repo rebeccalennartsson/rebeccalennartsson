@@ -1,68 +1,26 @@
-// Renders <App /> to static HTML inside build/index.html's #root, so crawlers that don't
-// run JavaScript — which is most AI assistants, ChatGPT included — see the real copy
-// instead of an empty <div id="root"></div>. Each service page in Config (one with a
-// `slug`) also gets build/<slug>/index.html with its own title, meta tags and JSON-LD.
-// Runs as `postbuild`.
+// Renders every page to static HTML so crawlers that don't run JavaScript — which is most
+// AI assistants, ChatGPT included — see the real copy instead of an empty
+// <div id="root"></div>. build/index.html gets the home page; each service page in Config
+// (one with a `slug`) gets build/<slug>/index.html with its own title, meta tags and
+// JSON-LD. index.jsx hydrates this markup instead of replacing it.
 //
-// index.js uses createRoot, not hydrateRoot, so this markup is simply replaced once the
-// bundle loads. That keeps it free of hydration-mismatch concerns (Menu reads
-// window.innerWidth during render) at the cost of a re-render on load.
-//
-// No extra dependencies: @babel/core and its presets come with react-scripts.
+// Runs at the end of `yarn build`, after Vite has built the client into build/ and the
+// server bundle (src/entry-server.jsx) into build-ssr/.
 
-const fs = require('fs');
-const path = require('path');
-const Module = require('module');
-const babel = require('@babel/core');
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = path.resolve(__dirname, '..');
-const srcDir = path.join(root, 'src');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const buildDir = path.join(root, 'build');
 const indexPath = path.join(buildDir, 'index.html');
 
-const manifest = JSON.parse(fs.readFileSync(path.join(buildDir, 'asset-manifest.json'), 'utf8'));
+const { render, Config } = await import(path.join(root, 'build-ssr', 'entry-server.js'));
 
-// Compile src/ on the fly; stylesheets are irrelevant to the markup.
-const compileJs = Module._extensions['.js'];
-Module._extensions['.js'] = (module, filename) => {
-    if (!filename.startsWith(srcDir)) {
-        return compileJs(module, filename);
-    }
-    const { code } = babel.transformSync(fs.readFileSync(filename, 'utf8'), {
-        filename,
-        babelrc: false,
-        configFile: false,
-        presets: [
-            [require.resolve('@babel/preset-env'), { targets: { node: 'current' }, modules: 'commonjs' }],
-            [require.resolve('@babel/preset-react'), { runtime: 'automatic' }],
-        ],
-    });
-    module._compile(code, filename);
-};
-Module._extensions['.scss'] = () => {};
-// Resolve bundled media to the same hashed URL webpack emitted.
-Module._extensions['.mp3'] = (module, filename) => {
-    const key = `static/media/${path.basename(filename)}`;
-    const url = manifest.files[key];
-    if (!url) {
-        throw new Error(`prerender: ${key} not found in asset-manifest.json`);
-    }
-    module.exports = url;
-};
-
-// Menu picks its layout from window.innerWidth during render. Prerender the phone layout,
-// since that is what most visitors get.
-global.window = { innerWidth: 390 };
-
-const React = require('react');
-const { renderToString } = require('react-dom/server');
-const App = require(path.join(srcDir, 'App.js')).default;
-const { Config } = require(path.join(srcDir, 'Server', 'Config.js'));
-
-const baseUrl = require(path.join(root, 'package.json')).homepage.replace(/\/*$/, '/');
+const baseUrl = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).homepage.replace(/\/*$/, '/');
 const placeholder = '<div id="root"></div>';
-const template = fs.readFileSync(indexPath, 'utf8');
-if (!template.includes(placeholder)) {
+const builtHtml = fs.readFileSync(indexPath, 'utf8');
+if (!builtHtml.includes(placeholder)) {
     throw new Error(`prerender: ${placeholder} not found in build/index.html`);
 }
 
@@ -153,10 +111,36 @@ const withServicePageHead = (html, page) => {
     return replaceRequired(result, /<\/head>/, () => `<script type="application/ld+json">${jsonLd}</script></head>`);
 };
 
-const withMarkup = (html, pathname) => {
-    const markup = renderToString(React.createElement(App, { path: pathname }));
-    return html.replace(placeholder, () => `<div id="root">${markup}</div>`);
+const withMarkup = (html, pathname) => html.replace(placeholder, () => `<div id="root">${render(pathname)}</div>`);
+
+// The stylesheet is under 3 kB, so inlining it saves a render-blocking request on phones.
+// Its font URLs are absolute, so they still resolve from the inlined copy.
+const withInlinedCss = html => {
+    const stylesheet = /<link rel="stylesheet" crossorigin href="(\/assets\/[^"]+\.css)">/;
+    const [, href] = html.match(stylesheet) || [];
+    if (!href) {
+        throw new Error('prerender: stylesheet link not found in build/index.html');
+    }
+    const css = fs.readFileSync(path.join(buildDir, href), 'utf8');
+    return html.replace(stylesheet, () => `<style>${css}</style>`);
 };
+
+// The phone's first screen uses only these weights: 100 for the logo and tagline, 400 for
+// the services line. Without a preload the fonts are only discovered once styles apply.
+const FIRST_SCREEN_FONT_WEIGHTS = ['100', '400'];
+
+const withFontPreloads = html => {
+    const preloads = FIRST_SCREEN_FONT_WEIGHTS.map(weight => {
+        const [url] = html.match(new RegExp(`/assets/roboto-latin-${weight}-[\\w-]+\\.woff2`)) || [];
+        if (!url) {
+            throw new Error(`prerender: font weight ${weight} not found in the stylesheet`);
+        }
+        return `<link rel="preload" as="font" type="font/woff2" href="${url}" crossorigin>`;
+    });
+    return replaceRequired(html, /<\/head>/, () => `${preloads.join('')}</head>`);
+};
+
+const template = withFontPreloads(withInlinedCss(builtHtml));
 
 fs.writeFileSync(indexPath, withMarkup(template, '/'));
 console.log('prerender: wrote build/index.html');

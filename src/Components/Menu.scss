@@ -1,4 +1,4 @@
-@import '../Variables.scss';
+@use '../Variables' as *;
 
 .menu {
     position: fixed;
@@ -35,8 +35,8 @@
         padding-right: max(clamp(14px, 3.5vw, 24px), env(safe-area-inset-right));
         transition: background-color 0.4s $ease, box-shadow 0.4s $ease;
 
-        > div {
-            display: flex;
+        .desktop-links {
+            display: none;
             align-items: center;
             gap: clamp(12px, 2vw, 24px);
 
@@ -183,9 +183,19 @@
 }
 
 @media (min-width: $mediaQueryBrake) {
-    .menu .large {
-        padding-top: $padding;
-        padding-bottom: $padding;
+    .menu {
+        .navigation {
+            padding-top: $padding;
+            padding-bottom: $padding;
+
+            .desktop-links {
+                display: flex;
+            }
+        }
+
+        .open-menu-btn {
+            display: none;
+        }
     }
 }
 

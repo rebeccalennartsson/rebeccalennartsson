@@ -2,7 +2,7 @@
 <html lang="sv">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#22201e" />
     <title>Sångerska Göteborg – Rebecca Lennartsson | Bröllop &amp; Dop</title>
@@ -15,14 +15,14 @@
 
     <!-- The hero photo is the LCP element and is set as a CSS background, so without
          these the browser cannot start fetching it until main.css has parsed. -->
-    <link rel="preload" as="image" href="%PUBLIC_URL%/images/portrait.webp" media="(max-width: 820px)" />
-    <link rel="preload" as="image" href="%PUBLIC_URL%/images/landscape.webp" media="(min-width: 821px)" />
+    <link rel="preload" as="image" href="/images/portrait.webp" media="(max-width: 820px)" />
+    <link rel="preload" as="image" href="/images/landscape.webp" media="(min-width: 821px)" />
     <!-- Declared here, not in App.scss, so the paths match the preloads above and stay
-         unhashed. css-loader would otherwise try to resolve them as webpack modules. -->
+         unhashed instead of going through the bundler. -->
     <style>
       :root {
-        --hero-portrait: url("%PUBLIC_URL%/images/portrait.webp");
-        --hero-landscape: url("%PUBLIC_URL%/images/landscape.webp");
+        --hero-portrait: url("/images/portrait.webp");
+        --hero-landscape: url("/images/landscape.webp");
       }
     </style>
 
@@ -54,8 +54,8 @@
     <meta name="twitter:image" content="https://rebeccalennartsson.se/og-image.jpg" />
     <meta name="twitter:image:alt" content="Rebecca Lennartsson – sångerska i Göteborg" />
 
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <link rel="manifest" href="/manifest.json" />
 
     <script type="application/ld+json">
       {
@@ -181,5 +181,6 @@
     <!-- scripts/prerender.js fills this with the rendered page after `yarn build`, so
          crawlers that do not run JavaScript still see the copy. Keep it exactly as is. -->
     <div id="root"></div>
+    <script type="module" src="/src/index.jsx"></script>
   </body>
 </html>

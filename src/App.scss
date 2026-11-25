@@ -1,5 +1,5 @@
-@import './Variables.scss';
-@import './fonts.scss';
+@use './Variables' as *;
+@use './fonts';
 
 * {
   font-family: Roboto, sans-serif;

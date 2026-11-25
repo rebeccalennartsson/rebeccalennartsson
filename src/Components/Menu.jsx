@@ -33,7 +33,9 @@ export const Menu = () => {
     const { Config, servicePage } = useContext(ConfigContext);
     const [isOpen, setIsOpen] = useState(false);
     const [contentIsInView, setContentIsInView] = useState(false);
-    const [isPhone, setIsPhone] = useState(window.innerWidth < MEDIA_QUERY_BRAKE);
+    // Starts false so the prerendered markup and the first client render match; CSS, not
+    // this flag, decides which navigation is visible.
+    const [isPhone, setIsPhone] = useState(false);
     const [currentSection, setCurrentSection] = useState(null);
     const dropDownRef = useRef(null);
     const openButtonRef = useRef(null);
@@ -54,6 +56,7 @@ export const Menu = () => {
     }, []);
 
     useEffect(() => {
+        handleResize();
         window.addEventListener('resize', handleResize, { passive: true });
         return () => window.removeEventListener('resize', handleResize);
     }, []);
@@ -168,64 +171,54 @@ export const Menu = () => {
         )
         : null;
 
-    if (isPhone) {
-        if (isOpen) {
-            return (
-                <nav className="menu" aria-label="Huvudmeny">
-                    <div
-                        className="drop-down"
-                        id="huvudmeny"
-                        role="dialog"
-                        aria-modal="true"
-                        aria-label="Meny"
-                        ref={dropDownRef}
-                    >
-                        <button
-                            className="close-menu-btn"
-                            type="button"
-                            aria-label="Stäng meny"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            &times;
-                        </button>
-                        {links}
-                        {contactLink}
-                    </div>
-                </nav>
-            )
-        } else {
-            return (
-                <nav className="menu" aria-label="Huvudmeny">
-                    <div className={`navigation ${contentIsInView ? 'navigation-inverted' : ''}`}>
-                        <TextLogo isServicePage={servicePage !== null} />
-                        <button
-                            className={`open-menu-btn ${contentIsInView ? 'open-menu-btn-inverted' : ''}`}
-                            type="button"
-                            aria-label="Öppna meny"
-                            aria-expanded={isOpen}
-                            aria-controls="huvudmeny"
-                            onClick={() => setIsOpen(true)}
-                            ref={openButtonRef}
-                        >
-                            <span />
-                            <span />
-                            <span />
-                        </button>
-                    </div>
-                </nav>
-            )
-        }
-    } else {
+    if (isOpen && isPhone) {
         return (
             <nav className="menu" aria-label="Huvudmeny">
-                <div className={`navigation large ${contentIsInView ? 'navigation-inverted ' : ''}`}>
-                    <TextLogo isServicePage={servicePage !== null} />
-                    <div>
-                        {links}
-                        {contactLink}
-                    </div>
+                <div
+                    className="drop-down"
+                    id="huvudmeny"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Meny"
+                    ref={dropDownRef}
+                >
+                    <button
+                        className="close-menu-btn"
+                        type="button"
+                        aria-label="Stäng meny"
+                        onClick={() => setIsOpen(false)}
+                    >
+                        &times;
+                    </button>
+                    {links}
+                    {contactLink}
                 </div>
             </nav>
-        )
+        );
     }
+
+    return (
+        <nav className="menu" aria-label="Huvudmeny">
+            <div className={`navigation ${contentIsInView ? 'navigation-inverted' : ''}`}>
+                <TextLogo isServicePage={servicePage !== null} />
+                <div className="desktop-links">
+                    {links}
+                    {contactLink}
+                </div>
+                <button
+                    className={`open-menu-btn ${contentIsInView ? 'open-menu-btn-inverted' : ''}`}
+                    type="button"
+                    aria-label="Öppna meny"
+                    aria-expanded={isOpen}
+                    aria-controls="huvudmeny"
+                    onClick={() => setIsOpen(true)}
+                    ref={openButtonRef}
+                >
+                    <span />
+                    <span />
+                    <span />
+                </button>
+            </div>
+        </nav>
+    );
 };

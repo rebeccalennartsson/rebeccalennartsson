@@ -2,6 +2,9 @@ import { React, Fragment, useContext, useState, useEffect } from 'react';
 import { ConfigContext } from '../Server/ConfigContext';
 import { Form } from './ContactForm';
 
+// Bundled so the files get hashed URLs; a runtime path string alone would 404.
+const localAudioUrls = import.meta.glob('../audio/*.mp3', { eager: true, query: '?url', import: 'default' });
+
 const servicePageHref = page => `/${page.slug}/`;
 
 const PageSection = (props) => {
@@ -92,7 +95,7 @@ export const Main = (props) => {
         .filter(m => !m.disabled)
         .map((m, key) => {
             const { src , title, local, altText } = m;
-            const audioSrc = local ? require(`../audio/${src}`) : src;
+            const audioSrc = local ? localAudioUrls[`../audio/${src}`] : src;
             return (
                 <section
                     key={key}

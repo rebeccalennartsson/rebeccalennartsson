@@ -9,11 +9,13 @@ copy or hosting.
 
 ## Commands
 
-Create React App (react-scripts 5) with yarn:
+Vite + React with yarn:
 
-- `yarn start` — dev server on http://localhost:3000
-- `yarn build` — production build to `build/`, then prerenders the page into
-  `build/index.html` (`scripts/prerender.js`)
+- `yarn start` — dev server on http://localhost:3000 (or the next free port)
+- `yarn build` — production build to `build/`, then prerenders the home page and each
+  service page (`/brollop/`, `/begravning/`, `/dop/`, `/event/`) into static HTML
+  (`scripts/prerender.js`)
+- `yarn preview` — serves the finished build locally
 - `yarn deploy` — builds and publishes `build/` to the `gh-pages` branch, which is what
   the live site serves
 
@@ -24,7 +26,7 @@ There are no tests.
 All text, sections and media live in [`src/Server/Config.js`](src/Server/Config.js). To
 hide a section, set `disabled: true` rather than deleting it.
 
-The structured data and descriptions in `public/index.html` (JSON-LD `description`
+The structured data and descriptions in `index.html` (JSON-LD `description`
 fields, meta/OG descriptions) are written by hand. When the copy changes, update them to
 match, and bump `lastmod` in `public/sitemap.xml`.
 

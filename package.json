@@ -3,38 +3,22 @@
   "homepage": "https://rebeccalennartsson.se",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1"
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "postbuild": "node scripts/prerender.js",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "start": "vite",
+    "build": "vite build && vite build --ssr src/entry-server.jsx --outDir build-ssr && node scripts/prerender.js",
+    "preview": "vite preview",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
-    "gh-pages": "^4.0.0",
-    "sass": "^1.54.4"
+    "@vitejs/plugin-react": "6.3.0",
+    "gh-pages": "6.3.0",
+    "sass": "1.108.2",
+    "vite": "8.3.8"
   }
 }
