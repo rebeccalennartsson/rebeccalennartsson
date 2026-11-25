@@ -50,7 +50,8 @@ body {
   );
   text-shadow: 0 1px 18px rgba(0, 0, 0, 0.5);
 
-  p {
+  p,
+  h1 {
     margin: 0;
   }
 
@@ -129,6 +130,22 @@ body {
 
       &:last-child {
         margin-bottom: 0;
+      }
+    }
+
+    .text .lead {
+      color: $white;
+    }
+
+    .text .faq-question {
+      margin: 1.6em 0 0.4em;
+      font-size: 1em;
+      font-weight: 400;
+      line-height: 1.4;
+      color: $white;
+
+      &:first-child {
+        margin-top: 0;
       }
     }
 

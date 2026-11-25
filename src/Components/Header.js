@@ -3,14 +3,16 @@ import { Menu } from './Menu';
 import { ConfigContext } from '../Server/ConfigContext';
 
 const Header = () => {
-    const { Config } = useContext(ConfigContext);
+    const { Config, servicePage } = useContext(ConfigContext);
     const { tagline, services } = Config.settings.hero;
 
     return (
         <header className="App-header">
             <Menu />
             <div className="hero-intro">
-                <p className="hero-tagline">{tagline}</p>
+                {servicePage
+                    ? <h1 className="hero-tagline">{servicePage.article.heading}</h1>
+                    : <p className="hero-tagline">{tagline}</p>}
                 <p className="hero-services">{services}</p>
             </div>
         </header>

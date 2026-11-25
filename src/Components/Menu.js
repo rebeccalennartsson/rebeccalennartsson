@@ -4,21 +4,22 @@ import { ConfigContext } from '../Server/ConfigContext';
 
 const sectionIdFor = title => title.replaceAll(' ', '-');
 
-const TextLogo = () => {
+// A service page's own heading is its <h1>, so the logo steps down there.
+const TextLogo = ({ isServicePage }) => {
+    const LogoTag = isServicePage ? 'p' : 'h1';
     return (
-        <h1>
+        <LogoTag className="logo">
             <a href="/">Rebecca Lennartsson</a>
-        </h1>
+        </LogoTag>
     )
 }
 
 const Link = (props) => {
-    const { event, title, navigate, isCurrent } = props;
-    const href = navigate === null ? sectionIdFor(title) : navigate;
+    const { event, title, href, isCurrent } = props;
     return (
         <a
             onClick={event}
-            href={`#${href}`}
+            href={href}
             className={isCurrent ? 'is-current' : undefined}
             aria-current={isCurrent ? 'true' : undefined}
         >
@@ -29,7 +30,7 @@ const Link = (props) => {
 
 export const Menu = () => {
     const MEDIA_QUERY_BRAKE = 821;
-    const { Config } = useContext(ConfigContext);
+    const { Config, servicePage } = useContext(ConfigContext);
     const [isOpen, setIsOpen] = useState(false);
     const [contentIsInView, setContentIsInView] = useState(false);
     const [isPhone, setIsPhone] = useState(window.innerWidth < MEDIA_QUERY_BRAKE);
@@ -138,14 +139,22 @@ export const Menu = () => {
         return () => observer.disconnect();
     }, [Config]);
 
+    // On a service page the home sections are elsewhere, so link to pages, not anchors.
+    const hrefFor = page => {
+        if (!servicePage) {
+            return `#${sectionIdFor(page.title)}`;
+        }
+        return page.slug ? `/${page.slug}/` : `/#${sectionIdFor(page.title)}`;
+    };
+
     const pages = Config.pages.filter(p => !p.disabled);
     const links = pages.map((page, key) => (
         <Link
             event={() => setIsOpen(false)}
             key={key}
             title={page.title}
-            navigate={null}
-            isCurrent={currentSection === sectionIdFor(page.title)}
+            href={hrefFor(page)}
+            isCurrent={servicePage ? page === servicePage : currentSection === sectionIdFor(page.title)}
         />
     ));
     const contactLink = !Config.settings.contact.disabled
@@ -153,7 +162,7 @@ export const Menu = () => {
             <Link
                 event={() => setIsOpen(false)}
                 title="KONTAKT"
-                navigate="form"
+                href="#form"
                 isCurrent={currentSection === 'form'}
             />
         )
@@ -188,7 +197,7 @@ export const Menu = () => {
             return (
                 <nav className="menu" aria-label="Huvudmeny">
                     <div className={`navigation ${contentIsInView ? 'navigation-inverted' : ''}`}>
-                        <TextLogo />
+                        <TextLogo isServicePage={servicePage !== null} />
                         <button
                             className={`open-menu-btn ${contentIsInView ? 'open-menu-btn-inverted' : ''}`}
                             type="button"
@@ -210,7 +219,7 @@ export const Menu = () => {
         return (
             <nav className="menu" aria-label="Huvudmeny">
                 <div className={`navigation large ${contentIsInView ? 'navigation-inverted ' : ''}`}>
-                    <TextLogo />
+                    <TextLogo isServicePage={servicePage !== null} />
                     <div>
                         {links}
                         {contactLink}

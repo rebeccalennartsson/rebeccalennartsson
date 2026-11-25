@@ -11,7 +11,7 @@
         color: $white;
     }
 
-    h1 {
+    .logo {
         // Must be allowed to shrink, or it pushes the menu button off narrow screens.
         flex: 1 1 auto;
         min-width: 0;

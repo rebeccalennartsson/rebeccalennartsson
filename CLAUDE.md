@@ -24,10 +24,18 @@ DNS is at Loopia (`ns1/ns2.loopia.se`): four A records on `@` → `185.199.108.1
 
 ## Architecture
 
-A single-page, single-route marketing site for a Swedish singer, whose purpose is to be
-found in local and AI search — read **SEO** below before changing markup, copy, or the
-hosting setup. All user-facing copy is Swedish. There is no router, no backend, and no
-data fetching.
+A marketing site for a Swedish singer, whose purpose is to be found in local and AI
+search — read **SEO** below before changing markup, copy, or the hosting setup. All
+user-facing copy is Swedish. There is no router library, no backend, and no data fetching.
+
+**Pages:** the home page (`/`) plus one landing page per service — `/brollop/`,
+`/begravning/`, `/dop/`, `/event/`. A `pages` entry with a `slug` and an `article` (meta
+title/description, `<h1>` heading, sections, FAQ) gets its own page. `index.js` passes
+`window.location.pathname` to `App`, which resolves it with `servicePageForPath` and puts
+the match in context as `servicePage` (`null` on home). Header, Menu, Main and the
+contact form branch on it: on a service page the heading is the `<h1>` (the logo becomes a
+`<p>`), nav links point at the other pages instead of anchors, and the form preselects
+the matching subject. Each home section with a slug links to its page.
 
 **Content is data, not markup.** `src/Server/Config.js` exports one `Config` object that drives everything rendered: the `pages` array becomes both the page sections and the nav links, and `settings` controls the YouTube embeds, MP3 players, and contact form. Content and feature-flag changes belong in that file, not in components. Despite the `Server/` folder name, it is a static import — nothing is fetched.
 
@@ -68,7 +76,11 @@ therefore very easy to drop by accident.
    that ships with react-scripts. `index.js` uses `createRoot`, not `hydrateRoot`, so the
    bundle simply replaces that markup. AI fetchers (ChatGPT included) also drop
    `<noscript>`, scripts and meta, so **the prerendered markup is the only copy they
-   read** — before it existed they saw a title and nothing else. **On a rebuild, keep
+   read** — before it existed they saw a title and nothing else. It also writes
+   `build/<slug>/index.html` for every service page, rewriting the title, description,
+   canonical, OG/Twitter tags and appending a `WebPage` + `Service` + `BreadcrumbList` +
+   `FAQPage` JSON-LD block, all generated from `Config.js`. It throws if a tag it rewrites
+   is missing from `index.html`. **On a rebuild, keep
    static tags and a prerendered/SSG body.** A client-only rewrite is a silent, total
    regression in AI discoverability.
 
@@ -84,15 +96,17 @@ therefore very easy to drop by accident.
    event. This is what makes her a recognisable *entity* rather than a page of text, and
    it is the main thing assistants quote back. Validate after editing — a JSON syntax
    error silently voids all of it.
-5. **One `<h1>`** (the `Menu` logo, her name) and `<h2>` per section. Every section used
+5. **One `<h1>`** per page — the `Menu` logo (her name) on home, the service heading on a
+   service page — and `<h2>` per section. Every section used
    to be an `<h1>`, which flattens the hierarchy.
 6. **Absolute URLs everywhere** (canonical, `og:url`, `og:image`, every JSON-LD `@id`
    and `url`) pointing at the live base URL — currently
    `https://rebeccalennartsson.se/`. These cannot be relative,
    and they all have to move together if the base URL changes.
 7. **`robots.txt` + `sitemap.xml`** exist at the domain root, and `robots.txt` explicitly
-   allows the AI/answer-engine crawlers and points at the sitemap. Bump the sitemap
-   `lastmod` when the copy changes.
+   allows the AI/answer-engine crawlers and points at the sitemap. The sitemap is
+   hand-written: add a URL when a service page is added, and bump `lastmod` when the copy
+   changes.
 8. **Mobile performance is a ranking factor and most visitors are on phones.** The hero
    photo is the LCP element; it is a CSS background, so it is preloaded from
    `public/images/` via `<link rel="preload">` with `media` attributes, and the URLs are
@@ -103,7 +117,7 @@ therefore very easy to drop by accident.
    planning — a square image gets cropped or downgraded to a small card.
 
 **The one maintenance trap:** `public/index.html` and `src/Server/Config.js` both contain
-overlapping claims. The page body is prerendered from `Config.js`, but the JSON-LD
+overlapping claims (service pages are exempt — their head tags and JSON-LD are generated). The page body is prerendered from `Config.js`, but the JSON-LD
 `description` fields (and the meta/OG descriptions) are hand-written — when you change a
 page's text, update them to match. Nothing enforces this, and drift means crawlers and
 humans see different claims.

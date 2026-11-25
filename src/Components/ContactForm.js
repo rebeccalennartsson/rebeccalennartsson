@@ -32,11 +32,12 @@ const TextArea = (props) => {
 }
 
 export const Form = () => {
-    const { Config } = useContext(ConfigContext);
+    const { Config, servicePage } = useContext(ConfigContext);
     const selectOptions = [
         'Bröllop',
         'Begravning',
         'Dop',
+        'Event',
         'Övrigt',
     ];
 
@@ -44,7 +45,7 @@ export const Form = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [date, setDate] = useState('');
-    const [subject, setSubject] = useState(selectOptions[0]);
+    const [subject, setSubject] = useState(servicePage ? servicePage.article.contactSubject : selectOptions[0]);
 
     const { settings: { contact }} = Config;
 
